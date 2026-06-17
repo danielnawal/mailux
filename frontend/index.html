@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mailux</title>
+<link rel="stylesheet" href="/assets/css/app.css?v=20260617g">
+<!-- Editor de correo por bloques (responsive, tipo Brevo) -->
+<link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
+<script src="https://unpkg.com/grapesjs"></script>
+<script src="https://unpkg.com/grapesjs-preset-newsletter"></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Mailux</div>
+    <p class="login-sub">Plataforma de email marketing</p>
+    <form id="login-form">
+      <div class="field"><label>Correo</label><input type="email" id="login-email" required></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="login-pass" required></div>
+      <button type="submit" class="btn-primary" id="login-btn">Ingresar</button>
+      <p id="login-error" class="error-msg"></p>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <aside class="sidebar">
+    <div class="sidebar-logo">Mailux</div>
+    <nav>
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">&#9632;</span> Dashboard
+      </a>
+      <a href="#" class="nav-item" data-page="lists">
+        <span class="nav-icon">&#9632;</span> Listas
+      </a>
+      <a href="#" class="nav-item" data-page="campaigns">
+        <span class="nav-icon">&#9632;</span> Campañas
+      </a>
+      <a href="#" class="nav-item" data-page="landing">
+        <span class="nav-icon">&#9632;</span> Landing pages
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="user-email-display"></span>
+      <a href="/manual.html" class="btn-ghost" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px; padding:8px 12px;">📚 Manual</a>
+      <button class="btn-ghost" id="logout-btn">Salir</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <!-- DASHBOARD -->
+    <section id="page-dashboard" class="page active">
+      <h1>Dashboard</h1>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="card" style="margin-top:24px">
+        <h2>Campañas recientes</h2>
+        <table class="table" id="recent-table">
+          <thead><tr><th>Campaña</th><th>Asunto</th><th>Enviados</th><th>Fallidos</th><th>Fecha</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LISTAS -->
+    <section id="page-lists" class="page">
+      <div class="page-header">
+        <h1>Listas de contactos</h1>
+        <button class="btn-primary" id="new-list-btn">+ Nueva lista</button>
+      </div>
+      <div id="lists-container"></div>
+
+      <!-- Modal nueva lista -->
+      <div id="modal-new-list" class="modal" style="display:none">
+        <div class="modal-box">
+          <h2>Nueva lista</h2>
+          <div class="field"><label>Nombre</label><input type="text" id="new-list-name" placeholder="Ej: Clientes enero 2024"></div>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="cancel-new-list">Cancelar</button>
+            <button class="btn-primary" id="save-new-list">Crear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal subir contactos -->
+      <div id="modal-upload" class="modal" style="display:none">
+        <div class="modal-box">
+          <h2>Agregar contactos</h2>
+          <p class="hint">Sube un archivo <code>CSV</code> o <code>Excel</code> (.xlsx), o pega los correos directo (uno por línea). Las mayúsculas se pasan a minúsculas solas y se valida que el dominio exista para no rebotar.</p>
+
+          <div class="field">
+            <label>Opción 1 — Archivo CSV o Excel</label>
+            <input type="file" id="csv-file" accept=".csv,.xls,.xlsx">
+            <p class="hint">Detecta solo las columnas de correo y nombre, en cualquier orden.</p>
+          </div>
+
+          <div class="field">
+            <label>Opción 2 — Pegar correos</label>
+            <textarea id="paste-emails" rows="6" placeholder="Un correo por línea. Acepta:&#10;juan@empresa.com&#10;Maria Lopez, maria@empresa.com&#10;Pega columnas desde Excel (nombre y correo)"></textarea>
+          </div>
+
+          <div id="upload-result"></div>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="cancel-upload">Cancelar</button>
+            <button class="btn-primary" id="do-upload">Agregar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal ver / administrar contactos -->
+      <div id="modal-contacts" class="modal" style="display:none">
+        <div class="modal-box modal-xl">
+          <h2 id="contacts-title">Contactos</h2>
+          <div id="contacts-filters" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
+          <div id="contacts-bulk" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px"></div>
+          <div id="contacts-list" style="overflow:auto;border:1px solid #e5e7eb;border-radius:8px"></div>
+          <p class="hint" id="contacts-note" style="margin-top:8px"></p>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="close-contacts">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMPAÑAS -->
+    <section id="page-campaigns" class="page">
+      <div class="page-header">
+        <h1>Campañas</h1>
+        <button class="btn-primary" id="new-campaign-btn">+ Nueva campaña</button>
+      </div>
+      <div id="campaigns-container"></div>
+
+      <!-- Modal nueva campaña -->
+      <div id="modal-new-campaign" class="modal" style="display:none">
+        <div class="modal-box modal-wide">
+          <h2>Nueva campaña</h2>
+          <div class="form-grid">
+            <div class="field"><label>Nombre interno</label><input type="text" id="c-name" placeholder="Campaña enero 2024"></div>
+            <div class="field"><label>Usar plantilla</label>
+              <select id="c-template">
+                <option value="">-- Ninguna (en blanco) --</option>
+              </select>
+              <p class="hint" id="template-hint" style="display:none;color:#0066cc;font-size:12px;">El cuerpo del correo se precargará con esta plantilla</p>
+            </div>
+            <div class="field"><label>Lista de contactos</label>
+              <select id="c-list"><option value="">-- Seleccionar --</option></select>
+            </div>
+            <div class="field"><label>Asunto</label><input type="text" id="c-subject" placeholder="Asunto del correo"></div>
+            <div class="field"><label>Nombre del remitente</label><input type="text" id="c-from-name" placeholder="Mi Empresa"></div>
+            <div class="field field-full"><label>Correo del remitente</label><input type="email" id="c-from-email" placeholder="hola@tudominio.com"></div>
+            <div class="field field-full">
+              <label>Contenido del correo</label>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+                <button type="button" class="btn-primary btn-sm" id="open-designer">Diseñar con bloques (imágenes, botones, PDF)</button>
+                <button type="button" class="btn-ghost btn-sm" id="preview-email">Vista previa</button>
+                <button type="button" class="btn-ghost btn-sm" id="test-email">Enviar prueba a mi correo</button>
+              </div>
+              <p class="hint">Diseña arrastrando bloques (sale responsive solo), o edita el HTML directo abajo. Usa <code>{{nombre}}</code> para personalizar con el nombre del contacto; <code>{{unsubscribe_link}}</code> agrega el enlace de baja (si no, se añade al pie).</p>
+              <textarea id="c-body" rows="8" placeholder="<h1>Hola {{nombre}}</h1><p>Tu mensaje aquí...</p>"></textarea>
+            </div>
+            <div class="field"><label>Programar envío (opcional)</label><input type="datetime-local" id="c-schedule"></div>
+            <div class="field field-full">
+              <label>Segmento (opcional) — enviar solo a quienes cumplan</label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <input type="text" id="c-seg-key" placeholder="campo (ej: ciudad)" style="flex:1;min-width:140px">
+                <span style="align-self:center">=</span>
+                <input type="text" id="c-seg-value" placeholder="valor (ej: Bogota)" style="flex:1;min-width:140px">
+              </div>
+              <p class="hint" id="c-fields-hint">Campos disponibles de la lista: (elige una lista). Úsalos también en el correo como <code>{{campo}}</code>.</p>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="cancel-new-campaign">Cancelar</button>
+            <button class="btn-primary" id="save-new-campaign">Guardar borrador</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal estadísticas -->
+      <div id="modal-stats" class="modal" style="display:none">
+        <div class="modal-box">
+          <h2 id="stats-title">Estadísticas</h2>
+          <div id="stats-content"></div>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="close-stats">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LANDING PAGES -->
+    <section id="page-landing" class="page">
+      <div class="page-header">
+        <h1>Landing pages</h1>
+        <button class="btn-primary" id="new-landing-btn">+ Nueva landing</button>
+      </div>
+      <p class="hint" style="margin-bottom:14px">Páginas públicas con un formulario para captar clientes nuevos: el que se registra entra solo a la lista que elijas (con validación anti-rebote).</p>
+      <div id="landing-container"></div>
+
+      <div id="modal-landing" class="modal" style="display:none">
+        <div class="modal-box modal-wide">
+          <h2 id="landing-modal-title">Nueva landing</h2>
+          <div class="form-grid">
+            <div class="field"><label>Título</label><input type="text" id="lp-title" placeholder="Suscríbete a nuestras ofertas"></div>
+            <div class="field"><label>Lista donde entran los registros</label><select id="lp-list"><option value="">-- Seleccionar --</option></select></div>
+            <div class="field field-full"><label>Subtítulo</label><input type="text" id="lp-subtitle" placeholder="Recibe promociones y novedades"></div>
+            <div class="field field-full"><label>Texto / descripción</label><textarea id="lp-body" rows="4" placeholder="Déjanos tu correo y entérate primero de todo."></textarea></div>
+            <div class="field"><label>Texto del botón</label><input type="text" id="lp-button" placeholder="Suscribirme"></div>
+            <div class="field"><label>Color</label><input type="color" id="lp-color" value="#2563eb" style="height:42px;padding:4px"></div>
+            <div class="field field-full"><label>Imagen (opcional)</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <button type="button" class="btn-ghost btn-sm" id="lp-img-btn">Subir imagen</button>
+                <span id="lp-img-name" class="hint"></span>
+              </div>
+            </div>
+            <div class="field field-full" style="border-top:1px solid #e5e7eb;padding-top:12px;margin-top:4px">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600"><input type="checkbox" id="lp-welcome"> Enviar correo de bienvenida automático al registrarse</label>
+            </div>
+            <div class="field"><label>De (remitente verificado)</label><input type="email" id="lp-welcome-from" placeholder="comercial@starlinkgps.net"></div>
+            <div class="field"><label>Asunto de bienvenida</label><input type="text" id="lp-welcome-subject" placeholder="¡Gracias por suscribirte!"></div>
+            <div class="field field-full"><label>Mensaje de bienvenida</label><textarea id="lp-welcome-html" rows="3" placeholder="<p>Hola {{nombre}}, gracias por registrarte. Pronto recibirás nuestras novedades.</p>"></textarea></div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="cancel-landing">Cancelar</button>
+            <button class="btn-primary" id="save-landing">Guardar y publicar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<input type="file" id="lp-img-input" accept="image/*" style="display:none">
+
+<!-- Editor de bloques (pantalla completa) -->
+<div id="designer" style="display:none;position:fixed;inset:0;z-index:200;background:#fff;flex-direction:column">
+  <div style="display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid #e5e7eb;align-items:center">
+    <strong style="margin-right:auto;font-size:15px">Diseñar correo</strong>
+    <button type="button" class="btn-ghost btn-sm" id="designer-img">Insertar imagen</button>
+    <button type="button" class="btn-ghost btn-sm" id="designer-pdf">Insertar PDF (botón de descarga)</button>
+    <button type="button" class="btn-ghost btn-sm" id="designer-cancel">Cancelar</button>
+    <button type="button" class="btn-primary btn-sm" id="designer-save">Guardar diseño</button>
+  </div>
+  <div id="gjs" style="flex:1;overflow:hidden"></div>
+</div>
+
+<!-- Vista previa -->
+<div id="modal-preview" class="modal" style="display:none">
+  <div class="modal-box modal-xl">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <h2 style="margin:0;margin-right:auto">Vista previa</h2>
+      <button type="button" class="btn-sm btn-ghost" id="preview-desktop">Escritorio</button>
+      <button type="button" class="btn-sm btn-ghost" id="preview-mobile">Celular</button>
+    </div>
+    <div style="background:#f1f5f9;padding:16px;border-radius:10px;display:flex;justify-content:center">
+      <iframe id="preview-frame" style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;width:100%;height:60vh;transition:width .2s"></iframe>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-ghost" id="close-preview">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="pdf-file-input" accept="application/pdf" style="display:none">
+<input type="file" id="img-file-input" accept="image/*" style="display:none">
+
+<script src="/assets/js/app.js?v=20260617g"></script>
+</body>
+</html>

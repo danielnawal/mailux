@@ -1,0 +1,199 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          MAILUX — GUÍA RÁPIDA                                ║
+║                          Email Marketing Platform                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📧 MAILUX EN 5 MINUTOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣  ACCEDE A MAILUX
+    🔗 http://mailux.gpssoftwarenumberone.com
+    📧 Email: admin@mailux.com
+    🔐 Password: mailux2024
+
+2️⃣  CREA UNA LISTA
+    • Dashboard → Listas → "+ Nueva lista"
+    • Ingresa nombre: "Mi Primera Lista"
+    • Haz clic en "Crear"
+
+3️⃣  SUBE CONTACTOS
+    • En la lista → "Subir contactos (CSV)"
+    • Formato CSV:
+      email,name
+      juan@example.com,Juan
+      maria@example.com,María
+    • Haz clic en "Subir"
+
+4️⃣  CREA UNA CAMPAÑA
+    • Dashboard → Campañas → "+ Nueva campaña"
+    • Completa:
+      - Nombre: "Mi Primera Campaña"
+      - Lista: "Mi Primera Lista"
+      - Asunto: "Hola {{nombre}}"
+      - From: Tu nombre y email
+      - Cuerpo: Escribe tu mensaje (usa {{nombre}} para personali)
+
+5️⃣  ENVÍA
+    • Haz clic en "Guardar borrador"
+    • Luego en botón azul "Enviar"
+    • ¡Listo! Verás estado "Enviando..."
+
+✅ Tu primer email está en camino.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔥 CARACTERÍSTICAS PRINCIPALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👁️  RASTREO DE APERTURAS
+    • Mailux automáticamente inserta un píxel invisible
+    • Sabe cuándo abre cada usuario
+    • Dashboard muestra: "847 abiertos (35%)"
+
+🖱️  RASTREO DE CLICS
+    • Cada link se reescribe automáticamente
+    • Detecta qué links clickeó quién
+    • Tabla de "Links más clickeados"
+
+⏰  ENVÍO PROGRAMADO
+    • En el campo "Programar envío" ingresa fecha/hora
+    • Formato: 2026-06-10 09:00
+    • Se envía automáticamente en esa fecha
+
+⏸️  PAUSA/REANUDA
+    • Si un envío está "Enviando..."
+    • Haz clic en "PAUSAR"
+    • Se detiene inmediatamente
+    • Puedes "REANUDAR" después
+
+📋  PLANTILLAS PREDEFINIDAS
+    • 5 templates profesionales incluidas
+    • Newsletter, Promoción, Bienvenida, Alerta, Resumen
+    • Se precarga el HTML, solo reemplaza variables
+
+📊  ESTADÍSTICAS
+    • Dashboard → Campañas → "Estadísticas"
+    • Ves: enviados, fallidos, abiertos, clics
+    • Auto-actualiza cada 2 segundos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 TIPS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ PERSONALIZACIÓN
+  • {{nombre}} — Se reemplaza con el nombre del contacto
+  • {{unsubscribe_link}} — Link automático para desuscribirse
+
+⚠️  OBLIGATORIO
+  • Siempre incluye {{unsubscribe_link}} en tus emails
+  • Usa asuntos claros y atractivos
+  • Prueba con 5-10 contactos ANTES de enviar a todos
+
+🎯 MEJORES PRÁCTICAS
+  • Martes-Jueves, 9 AM-12 PM: Mayor tasa de apertura
+  • Asunto claro: "Oferta especial: 50% off" (no "Mira esto")
+  • Incluir CTA (Call-to-Action): "Compra ahora", "Lee más"
+  • Test A/B: Envía asuntos diferentes a grupos pequeños
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ PREGUNTAS FRECUENTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+P: ¿Puedo deshacer un envío?
+R: No completamente, pero sí PAUSAR en mitad del envío:
+   Campañas → Busca campaña "Enviando..." → Haz clic "PAUSAR"
+
+P: ¿Qué es bounce handling?
+R: Emails que "rebotan" (no se entregan). Mailux automáticamente:
+   • Hard bounce (email no existe) → marca como "bounced"
+   • Los excluye de futuros envíos
+
+P: ¿Quién sabe que abro los emails?
+R: Solo TÚ. El tracking es privado. El píxel es invisible (1x1 px).
+
+P: ¿Cómo me desuscribo?
+R: Si incluyes {{unsubscribe_link}}, el usuario hace clic y se desuscribe
+   automáticamente. No recibirá más de esa lista.
+
+P: ¿Hay límite de contactos?
+R: No. Puedes enviar a 1 millón si quieres.
+
+P: ¿Cómo programo un envío?
+R: En "Nueva campaña" → Campo "Programar envío"
+   Ingresa: 2026-06-10 09:00
+   Se envía automáticamente a esa hora.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ "Credenciales inválidas"
+   ✓ Verifica email y contraseña (sensible a mayúsculas)
+   ✓ Si no recuerdas, contacta a tu admin
+
+❌ "No puedo crear campaña"
+   ✓ Primero crea una LISTA (Menú → Listas)
+   ✓ Luego sube CONTACTOS
+   ✓ Entonces crea la CAMPAÑA
+
+❌ "El email no se ve bien"
+   ✓ Usa HTML simple (no CSS complejo)
+   ✓ Usa las plantillas predefinidas (están optimizadas)
+   ✓ Usa tablas en lugar de divs (compatibilidad Outlook)
+
+❌ "Algunos emails fallaron"
+   • Email inválido (se filtra al subir CSV)
+   • Bounce previo (sin retransmisión)
+   • Unsubscribed (se desinscribieron antes)
+   ✓ Ve a Estadísticas → tabla "Enviados/Fallidos"
+
+❌ "Las estadísticas no se actualizan"
+   ✓ Haz clic en "Estadísticas" nuevamente
+   ✓ Si está ON, espera 2 segundos
+   ✓ Si no, haz clic en botón de actualizar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN COMPLETA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En Mailux → Botón "📚 Manual" (sidebar pie)
+o
+Abre: /manual.html
+
+Manual completo con:
+  ✓ Primeros pasos detallados
+  ✓ Guías paso a paso
+  ✓ Ejemplos HTML
+  ✓ FAQs completas
+  ✓ Troubleshooting
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎓 CERTIFICACIÓN RÁPIDA (30 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Crea 3 listas diferentes
+2. Sube 100 contactos a cada una
+3. Crea 3 campañas (una por lista)
+4. Envía 1 inmediatamente, programa 1 para mañana, pausa 1
+5. Ver estadísticas de cada una
+6. Cambia contraseña (pide a admin)
+
+Si logras esto → ¡Eres experto en Mailux! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📞 SOPORTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Lee esta GUÍA RÁPIDA
+2. Consulta el MANUAL (botón en sidebar)
+3. Si persiste el problema → contacta a tu admin
+
+Mailux v1.0 | 2026
+
+╚══════════════════════════════════════════════════════════════════════════════╝

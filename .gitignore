@@ -1,0 +1,14 @@
+node_modules/
+*.log
+.env
+.env.*
+data/
+uploads/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.bak
+*.bak-*
+*.bak.*
+.DS_Store
