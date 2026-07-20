@@ -17,19 +17,19 @@ async function api(method, path, body, isForm) {
 document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = document.getElementById('login-btn');
-  btn.textContent = 'Ingresando...'; btn.disabled = true;
+  btn.textContent = T('login_btn_loading'); btn.disabled = true;
   const data = await fetch(API + '/auth/login', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: document.getElementById('login-email').value, password: document.getElementById('login-pass').value })
   }).then(r => r.json()).catch(() => ({}));
-  btn.textContent = 'Ingresar'; btn.disabled = false;
+  btn.textContent = T('login_btn'); btn.disabled = false;
   if (data.token) {
     token = data.token; currentUser = data.user;
     localStorage.setItem('mx_token', token);
     localStorage.setItem('mx_user', JSON.stringify(currentUser));
     showApp();
   } else {
-    document.getElementById('login-error').textContent = data.error || 'Error al ingresar';
+    document.getElementById('login-error').textContent = data.error || T('login_err');
   }
 });
 
@@ -45,6 +45,7 @@ function showApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   document.getElementById('user-email-display').textContent = currentUser?.email || '';
+  try { applyStaticI18n(); } catch (e) {}
   navigateTo('dashboard');
 }
 
@@ -67,14 +68,14 @@ async function loadDashboard() {
   const stats = await api('GET', '/stats');
   if (!stats) return;
   document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card"><div class="stat-label">Listas</div><div class="stat-value">${stats.total_lists}</div></div>
-    <div class="stat-card"><div class="stat-label">Contactos</div><div class="stat-value">${stats.total_contacts.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">Campañas</div><div class="stat-value">${stats.total_campaigns}</div></div>
-    <div class="stat-card"><div class="stat-label">Correos enviados</div><div class="stat-value">${stats.total_sent.toLocaleString()}</div></div>
-    <div class="stat-card"><div class="stat-label">Suprimidos (no se envían)</div><div class="stat-value">${(stats.suppressed||0).toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">${T('st_lists')}</div><div class="stat-value">${stats.total_lists}</div></div>
+    <div class="stat-card"><div class="stat-label">${T('st_contacts')}</div><div class="stat-value">${stats.total_contacts.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">${T('st_campaigns')}</div><div class="stat-value">${stats.total_campaigns}</div></div>
+    <div class="stat-card"><div class="stat-label">${T('st_sent')}</div><div class="stat-value">${stats.total_sent.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="stat-label">${T('st_suppressed')}</div><div class="stat-value">${(stats.suppressed||0).toLocaleString()}</div></div>
   `;
   const tbody = document.querySelector('#recent-table tbody');
-  if (!stats.recent.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">Sin campañas enviadas aun</td></tr>'; return; }
+  if (!stats.recent.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px">${T('dash_no_campaigns')}</td></tr>`; return; }
   tbody.innerHTML = stats.recent.map(c => `
     <tr>
       <td>${c.name}</td>
@@ -91,34 +92,34 @@ async function loadLists() {
   if (!lists) return;
   const container = document.getElementById('lists-container');
   if (!lists.length) {
-    container.innerHTML = '<div class="empty-state"><strong>Sin listas aun</strong><p>Crea tu primera lista de contactos</p></div>'; return;
+    container.innerHTML = `<div class="empty-state"><strong>${T('lists_empty_title')}</strong><p>${T('lists_empty_sub')}</p></div>`; return;
   }
   container.innerHTML = lists.map(l => {
     const flags = [];
-    if (l.invalid_count) flags.push(`<span style="color:#dc2626">${l.invalid_count} inválidos (no se envían)</span>`);
-    if (l.risky_count) flags.push(`<span style="color:#f59e0b">${l.risky_count} riesgosos ${l.send_risky ? '(SÍ se envían)' : '(no se envían)'}</span>`);
-    if (l.unvalidated_count) flags.push(`<span style="color:#9ca3af">${l.unvalidated_count} sin validar</span>`);
+    if (l.invalid_count) flags.push(`<span style="color:#dc2626">${l.invalid_count} ${T('lc_invalid')}</span>`);
+    if (l.risky_count) flags.push(`<span style="color:#f59e0b">${l.risky_count} ${T('lc_risky')} ${l.send_risky ? T('lc_risky_yes') : T('lc_risky_no')}</span>`);
+    if (l.unvalidated_count) flags.push(`<span style="color:#9ca3af">${l.unvalidated_count} ${T('lc_unvalidated')}</span>`);
     const flagsHTML = flags.length ? `<p style="font-size:12px;margin:4px 0 0">${flags.join(' &middot; ')}</p>` : '';
     // El interruptor de riesgosos solo aparece si la lista tiene correos riesgosos.
     const riskyToggle = l.risky_count ? `
         <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#6b7280;margin-top:8px;cursor:pointer">
           <input type="checkbox" ${l.send_risky ? 'checked' : ''} onchange="toggleRisky(${l.id}, this.checked)">
-          Incluir los ${l.risky_count} riesgosos en el envío
+          ${T('lc_include_risky_a')} ${l.risky_count} ${T('lc_include_risky_b')}
         </label>` : '';
     return `
     <div class="list-card">
       <div class="list-info">
         <h3>${l.name}</h3>
-        <p>${l.total_contacts.toLocaleString()} contactos &middot; Creada ${l.created_at.slice(0,10)}</p>
+        <p>${l.total_contacts.toLocaleString()} ${T('lc_contacts')} &middot; ${T('lc_created')} ${l.created_at.slice(0,10)}</p>
         ${flagsHTML}
         ${riskyToggle}
       </div>
       <div class="list-actions">
-        <button class="btn-ghost btn-sm" onclick="openContacts(${l.id}, '${(l.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">Ver contactos</button>
-        <button class="btn-ghost btn-sm" onclick="renameList(${l.id}, '${(l.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">Editar nombre</button>
-        <button class="btn-ghost btn-sm" onclick="openUpload(${l.id})">Agregar contactos</button>
-        <button class="btn-ghost btn-sm" onclick="validateList(${l.id})">Validar correos</button>
-        <button class="btn-danger btn-sm" onclick="deleteList(${l.id},'${l.name}')">Eliminar</button>
+        <button class="btn-ghost btn-sm" onclick="openContacts(${l.id}, '${(l.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">${T('lc_view_contacts')}</button>
+        <button class="btn-ghost btn-sm" onclick="renameList(${l.id}, '${(l.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">${T('lc_rename')}</button>
+        <button class="btn-ghost btn-sm" onclick="openUpload(${l.id})">${T('lc_add_contacts')}</button>
+        <button class="btn-ghost btn-sm" onclick="validateList(${l.id})">${T('lc_validate')}</button>
+        <button class="btn-danger btn-sm" onclick="deleteList(${l.id},'${l.name}')">${T('delete')}</button>
       </div>
     </div>`;
   }).join('');
@@ -148,13 +149,13 @@ document.getElementById('cancel-upload').addEventListener('click', () => documen
 
 function renderIngestResult(res) {
   const lines = [];
-  lines.push(`<p style="color:#16a34a;font-weight:600;margin:0">${res.imported} contactos agregados</p>`);
+  lines.push(`<p style="color:#16a34a;font-weight:600;margin:0">${res.imported} ${T('ing_added')}</p>`);
   const detail = [];
-  if (res.valid) detail.push(`${res.valid} válidos`);
-  if (res.risky) detail.push(`<span style="color:#f59e0b">${res.risky} riesgosos</span>`);
-  if (res.invalid_domain) detail.push(`<span style="color:#dc2626">${res.invalid_domain} dominio inexistente (no se enviarán)</span>`);
-  if (res.duplicates) detail.push(`${res.duplicates} duplicados`);
-  if (res.bad_format) detail.push(`${res.bad_format} formato inválido`);
+  if (res.valid) detail.push(`${res.valid} ${T('ing_valid')}`);
+  if (res.risky) detail.push(`<span style="color:#f59e0b">${res.risky} ${T('ing_risky')}</span>`);
+  if (res.invalid_domain) detail.push(`<span style="color:#dc2626">${res.invalid_domain} ${T('ing_invalid_domain')}</span>`);
+  if (res.duplicates) detail.push(`${res.duplicates} ${T('ing_duplicates')}`);
+  if (res.bad_format) detail.push(`${res.bad_format} ${T('ing_bad_format')}`);
   if (detail.length) lines.push(`<p style="font-size:13px;margin:6px 0 0">${detail.join(' &middot; ')}</p>`);
   return `<div style="margin-top:16px;padding:12px;border-radius:8px;background:#f0fdf4;border:1px solid #86efac">${lines.join('')}</div>`;
 }
@@ -162,9 +163,9 @@ function renderIngestResult(res) {
 document.getElementById('do-upload').addEventListener('click', async () => {
   const file = document.getElementById('csv-file').files[0];
   const pasted = document.getElementById('paste-emails').value.trim();
-  if (!file && !pasted) { document.getElementById('upload-result').innerHTML = `<p style="color:#dc2626;margin-top:10px">Sube un archivo o pega los correos.</p>`; return; }
+  if (!file && !pasted) { document.getElementById('upload-result').innerHTML = `<p style="color:#dc2626;margin-top:10px">${T('up_need_file')}</p>`; return; }
 
-  const btn = document.getElementById('do-upload'); btn.textContent = 'Procesando...'; btn.disabled = true;
+  const btn = document.getElementById('do-upload'); btn.textContent = T('up_processing'); btn.disabled = true;
   let res;
   if (file) {
     const form = new FormData(); form.append('file', file);
@@ -172,13 +173,13 @@ document.getElementById('do-upload').addEventListener('click', async () => {
   } else {
     res = await api('POST', `/lists/${uploadListId}/paste`, { text: pasted });
   }
-  btn.textContent = 'Agregar'; btn.disabled = false;
+  btn.textContent = T('add'); btn.disabled = false;
 
   if (res?.imported !== undefined) {
     document.getElementById('upload-result').innerHTML = renderIngestResult(res);
     setTimeout(() => { document.getElementById('modal-upload').style.display = 'none'; loadLists(); }, 2200);
   } else {
-    document.getElementById('upload-result').innerHTML = `<p style="color:#dc2626;margin-top:10px">${res?.error || 'Error al agregar'}</p>`;
+    document.getElementById('upload-result').innerHTML = `<p style="color:#dc2626;margin-top:10px">${res?.error || T('up_err_add')}</p>`;
   }
 });
 
@@ -192,7 +193,7 @@ function updateSelCount() {
   const btn = document.getElementById('del-selected');
   if (!btn) return;
   const n = selectedContacts.size;
-  btn.textContent = `Eliminar seleccionados (${n})`;
+  btn.textContent = `${T('del_selected')} (${n})`;
   btn.disabled = n === 0;
   btn.style.opacity = n === 0 ? '.5' : '1';
 }
@@ -211,23 +212,26 @@ function toggleSelectAll(checked) {
 async function deleteSelected() {
   const ids = [...selectedContacts];
   if (!ids.length) return;
-  if (!confirm(`¿Eliminar ${ids.length} contactos seleccionados? No se puede deshacer.`)) return;
+  if (!confirm(`${T('confirm_del_batch_a')} ${ids.length} ${T('confirm_del_batch_b')}`)) return;
   const res = await api('POST', `/lists/${contactsListId}/contacts/delete-batch`, { ids });
-  if (res?.ok) { alert(`${res.deleted} contactos eliminados.`); loadContacts(); loadLists(); }
-  else alert(res?.error || 'No se pudo eliminar');
+  if (res?.ok) { alert(`${res.deleted} ${T('alert_deleted')}`); loadContacts(); loadLists(); }
+  else alert(res?.error || T('err_del'));
 }
 
-const VAL_BADGE = {
-  valid:   '<span style="color:#16a34a;font-weight:600">válido</span>',
-  risky:   '<span style="color:#f59e0b;font-weight:600">riesgoso</span>',
-  invalid: '<span style="color:#dc2626;font-weight:600">inválido</span>'
-};
+// Las CLAVES (valid/risky/invalid) son valores-dato del backend: NO se traducen.
+// Solo el texto visible dentro de cada <span> se traduce, por eso es una función.
+function valBadge(v){
+  if (v === 'valid')   return `<span style="color:#16a34a;font-weight:600">${T('badge_valid')}</span>`;
+  if (v === 'risky')   return `<span style="color:#f59e0b;font-weight:600">${T('badge_risky')}</span>`;
+  if (v === 'invalid') return `<span style="color:#dc2626;font-weight:600">${T('badge_invalid')}</span>`;
+  return '';
+}
 
 function openContacts(id, name) {
   contactsListId = id;
-  contactsListName = name || 'Contactos';
+  contactsListName = name || T('contacts');
   contactsFilter = '';
-  document.getElementById('contacts-title').textContent = `Contactos — ${contactsListName}`;
+  document.getElementById('contacts-title').textContent = `${T('contacts')} — ${contactsListName}`;
   document.getElementById('modal-contacts').style.display = 'flex';
   loadContacts();
 }
@@ -237,7 +241,7 @@ function setContactsFilter(f) { contactsFilter = f; loadContacts(); }
 
 async function loadContacts() {
   const listEl = document.getElementById('contacts-list');
-  listEl.innerHTML = '<p style="padding:16px;color:#9ca3af">Cargando...</p>';
+  listEl.innerHTML = `<p style="padding:16px;color:#9ca3af">${T('contacts_loading')}</p>`;
   const q = contactsFilter ? `?filter=${contactsFilter}` : '';
   const data = await api('GET', `/lists/${contactsListId}/contacts${q}`);
   if (!data) return;
@@ -246,41 +250,41 @@ async function loadContacts() {
   // Filtros
   const fbtn = (key, label, n, color) => `<button class="btn-sm ${contactsFilter===key?'btn-primary':'btn-ghost'}" onclick="setContactsFilter('${key}')" style="${color?`color:${contactsFilter===key?'':color}`:''}">${label} (${n})</button>`;
   document.getElementById('contacts-filters').innerHTML =
-    fbtn('', 'Todos', c.total) +
-    fbtn('valid', 'Válidos', c.valid, '#16a34a') +
-    fbtn('risky', 'Riesgosos', c.risky, '#f59e0b') +
-    fbtn('invalid', 'Inválidos', c.invalid, '#dc2626') +
-    (c.unvalidated ? fbtn('unvalidated', 'Sin validar', c.unvalidated, '#6b7280') : '');
+    fbtn('', T('f_all'), c.total) +
+    fbtn('valid', T('f_valid'), c.valid, '#16a34a') +
+    fbtn('risky', T('f_risky'), c.risky, '#f59e0b') +
+    fbtn('invalid', T('f_invalid'), c.invalid, '#dc2626') +
+    (c.unvalidated ? fbtn('unvalidated', T('f_unvalidated'), c.unvalidated, '#6b7280') : '');
 
   // Al recargar se reinicia la selección
   selectedContacts = new Set();
 
   // Acciones en bloque
-  const bulk = [`<button class="btn-danger btn-sm" id="del-selected" onclick="deleteSelected()" disabled style="opacity:.5">Eliminar seleccionados (0)</button>`];
-  if (c.invalid) bulk.push(`<button class="btn-danger btn-sm" onclick="purgeContacts('invalid', ${c.invalid})">Eliminar ${c.invalid} inválidos</button>`);
-  if (c.risky) bulk.push(`<button class="btn-warning btn-sm" onclick="purgeContacts('risky', ${c.risky})">Eliminar ${c.risky} riesgosos</button>`);
+  const bulk = [`<button class="btn-danger btn-sm" id="del-selected" onclick="deleteSelected()" disabled style="opacity:.5">${T('del_selected')} (0)</button>`];
+  if (c.invalid) bulk.push(`<button class="btn-danger btn-sm" onclick="purgeContacts('invalid', ${c.invalid})">${T('del_invalid')} ${c.invalid} ${T('purge_label_invalid')}</button>`);
+  if (c.risky) bulk.push(`<button class="btn-warning btn-sm" onclick="purgeContacts('risky', ${c.risky})">${T('del_risky')} ${c.risky} ${T('purge_label_risky')}</button>`);
   document.getElementById('contacts-bulk').innerHTML = bulk.join('');
 
   // Tabla con casilla de selección por fila + casilla "todos"
   if (!data.contacts.length) {
-    listEl.innerHTML = '<p style="padding:16px;color:#9ca3af">No hay contactos en este filtro.</p>';
+    listEl.innerHTML = `<p style="padding:16px;color:#9ca3af">${T('contacts_empty')}</p>`;
   } else {
     listEl.innerHTML = `<table class="table" style="margin:0"><thead><tr>
-        <th style="width:36px;text-align:center"><input type="checkbox" id="sel-all" onclick="toggleSelectAll(this.checked)" title="Seleccionar todos"></th>
-        <th>Correo</th><th>Nombre</th><th>Estado</th><th></th></tr></thead><tbody>${
+        <th style="width:36px;text-align:center"><input type="checkbox" id="sel-all" onclick="toggleSelectAll(this.checked)" title="${T('sel_all')}"></th>
+        <th>${T('th_email')}</th><th>${T('th_name')}</th><th>${T('th_state')}</th><th></th></tr></thead><tbody>${
       data.contacts.map(ct => `<tr>
         <td style="text-align:center"><input type="checkbox" class="rowsel" value="${ct.id}" onchange="toggleSelectOne(${ct.id}, this.checked)"></td>
         <td>${ct.email}</td>
         <td>${ct.name || '-'}</td>
-        <td>${VAL_BADGE[ct.validation] || '<span style="color:#9ca3af">sin validar</span>'}${ct.validation==='risky'||ct.validation==='invalid' ? `<br><span style="font-size:11px;color:#9ca3af">${ct.validation_reason||''}</span>` : ''}</td>
-        <td><button class="btn-danger btn-sm" onclick="deleteContact(${ct.id})">Eliminar</button></td>
+        <td>${valBadge(ct.validation) || `<span style="color:#9ca3af">${T('badge_unvalidated')}</span>`}${ct.validation==='risky'||ct.validation==='invalid' ? `<br><span style="font-size:11px;color:#9ca3af">${ct.validation_reason||''}</span>` : ''}</td>
+        <td><button class="btn-danger btn-sm" onclick="deleteContact(${ct.id})">${T('delete')}</button></td>
       </tr>`).join('')
     }</tbody></table>`;
   }
   updateSelCount();
   document.getElementById('contacts-note').textContent =
-    `${c.total.toLocaleString()} contactos en total. Inválidos y riesgosos no se envían (salvo que actives el interruptor de riesgosos).` +
-    (data.shown >= 1000 ? ' Se muestran los primeros 1000; usa los filtros para ver el resto.' : '');
+    `${c.total.toLocaleString()} ${T('contacts_note_a')}` +
+    (data.shown >= 1000 ? T('contacts_note_more') : '');
 }
 
 async function deleteContact(cid) {
@@ -333,31 +337,31 @@ async function loadCampaigns() {
   const campaigns = await api('GET', '/campaigns');
   if (!campaigns) return;
   const container = document.getElementById('campaigns-container');
-  const sandboxNotice = '<div class="sandbox-notice">Envío real por Amazon SES activo. AWS aún en modo sandbox: por ahora solo llegan a correos verificados en tu cuenta SES; cuando AWS apruebe producción podrás enviar a cualquier destinatario.</div>';
+  const sandboxNotice = '<div class="sandbox-notice">' + T('cmp_sandbox') + '</div>';
   if (!campaigns.length) {
-    container.innerHTML = sandboxNotice + '<div class="empty-state"><strong>Sin campañas aun</strong><p>Crea tu primera campaña</p></div>'; return;
+    container.innerHTML = sandboxNotice + '<div class="empty-state"><strong>' + T('cmp_empty_t') + '</strong><p>' + T('cmp_empty_s') + '</p></div>'; return;
   }
   const badges = { draft:'badge-draft', scheduled:'badge-warning', sending:'badge-sending', paused:'badge-warning', sent:'badge-sent', failed:'badge-failed' };
-  const labels = { draft:'Borrador', scheduled:'Programada', sending:'Enviando...', paused:'Pausada', sent:'Enviada', failed:'Fallida' };
+  const labels = { draft:T('cmp_draft'), scheduled:T('cmp_scheduled'), sending:T('cmp_sending'), paused:T('cmp_paused'), sent:T('cmp_sent'), failed:T('cmp_failed') };
   container.innerHTML = sandboxNotice + campaigns.map(c => {
-    const scheduledInfo = c.scheduled_at ? ` &middot; Envío: ${new Date(c.scheduled_at).toLocaleString()}` : '';
+    const scheduledInfo = c.scheduled_at ? ` &middot; ${T('cmp_sendinfo')}: ${new Date(c.scheduled_at).toLocaleString()}` : '';
     return `
     <div class="campaign-card">
       <div class="campaign-header">
         <div class="campaign-name">${c.name}</div>
         <span class="badge ${badges[c.status]}">${labels[c.status]}</span>
       </div>
-      <div class="campaign-meta">Asunto: ${c.subject} &middot; Lista: ${c.list_name || 'Sin lista'}${scheduledInfo} &middot; ${c.created_at.slice(0,10)}</div>
+      <div class="campaign-meta">${T('cmp_subject')}: ${c.subject} &middot; ${T('cmp_list')}: ${c.list_name || T('cmp_nolist')}${scheduledInfo} &middot; ${c.created_at.slice(0,10)}</div>
       <div class="campaign-footer">
-        <div style="font-size:13px;color:#6b7280">${c.sent} enviados &middot; ${c.failed} fallidos de ${c.total}</div>
+        <div style="font-size:13px;color:#6b7280">${c.sent} ${T('cmp_sent_n')} &middot; ${c.failed} ${T('cmp_failed_n')} ${c.total}</div>
         <div class="campaign-actions">
-          ${c.status === 'draft' ? `<button class="btn-ghost btn-sm" onclick="editCampaign(${c.id})">Editar</button>` : ''}
-          ${c.status === 'draft' ? `<button class="btn-send btn-sm" onclick="sendCampaign(${c.id},'${c.name}')">Enviar ahora</button>` : ''}
-          ${c.status === 'sending' ? `<button class="btn-warning btn-sm" onclick="pauseCampaign(${c.id})">Pausar</button>` : ''}
-          ${c.status === 'paused' ? `<button class="btn-send btn-sm" onclick="resumeCampaign(${c.id})">Reanudar</button>` : ''}
-          ${c.status === 'scheduled' ? `<button class="btn-danger btn-sm" onclick="cancelSchedule(${c.id})">Cancelar</button>` : ''}
-          ${c.status === 'sent' ? `<button class="btn-ghost btn-sm" onclick="viewStats(${c.id},'${c.name}')">Ver estadísticas</button>` : ''}
-          <button class="btn-ghost btn-sm" onclick="duplicateCampaign(${c.id},'${c.name}')">Duplicar</button>
+          ${c.status === 'draft' ? `<button class="btn-ghost btn-sm" onclick="editCampaign(${c.id})">${T('btn_edit')}</button>` : ''}
+          ${c.status === 'draft' ? `<button class="btn-send btn-sm" onclick="sendCampaign(${c.id},'${c.name}')">${T('btn_send_now')}</button>` : ''}
+          ${c.status === 'sending' ? `<button class="btn-warning btn-sm" onclick="pauseCampaign(${c.id})">${T('btn_pause')}</button>` : ''}
+          ${c.status === 'paused' ? `<button class="btn-send btn-sm" onclick="resumeCampaign(${c.id})">${T('btn_resume')}</button>` : ''}
+          ${c.status === 'scheduled' ? `<button class="btn-danger btn-sm" onclick="cancelSchedule(${c.id})">${T('btn_cancel')}</button>` : ''}
+          ${c.status === 'sent' ? `<button class="btn-ghost btn-sm" onclick="viewStats(${c.id},'${c.name}')">${T('btn_stats')}</button>` : ''}
+          <button class="btn-ghost btn-sm" onclick="duplicateCampaign(${c.id},'${c.name}')">${T('btn_duplicate')}</button>
         </div>
       </div>
     </div>`;
@@ -516,13 +520,13 @@ async function viewStats(id, name) {
     if (!stats) return;
     const openRate = stats.sent > 0 ? ((stats.opened / stats.sent) * 100).toFixed(1) : 0;
     document.getElementById('stats-content').innerHTML = `
-      <div class="stats-row"><span>Total contactos</span><span>${stats.total.toLocaleString()}</span></div>
-      <div class="stats-row"><span>Enviados</span><span style="color:#16a34a">${stats.sent.toLocaleString()}</span></div>
-      <div class="stats-row"><span>Aperturas</span><span style="color:#3b82f6;font-weight:700">${stats.opened || 0} (${openRate}%)</span></div>
-      <div class="stats-row"><span>Fallidos</span><span style="color:#dc2626">${stats.failed}</span></div>
-      <div class="stats-row"><span>Estado</span><span>${stats.status}</span></div>
-      <div class="stats-row"><span>Fecha de envío</span><span>${stats.sent_at ? stats.sent_at.slice(0,16).replace('T',' ') : '-'}</span></div>
-      <div style="font-size:11px;color:#9ca3af;margin-top:10px;text-align:right">Actualizado automáticamente</div>
+      <div class="stats-row"><span>${T('st_total')}</span><span>${stats.total.toLocaleString()}</span></div>
+      <div class="stats-row"><span>${T('st_sent')}</span><span style="color:#16a34a">${stats.sent.toLocaleString()}</span></div>
+      <div class="stats-row"><span>${T('st_opened')}</span><span style="color:#3b82f6;font-weight:700">${stats.opened || 0} (${openRate}%)</span></div>
+      <div class="stats-row"><span>${T('st_failed')}</span><span style="color:#dc2626">${stats.failed}</span></div>
+      <div class="stats-row"><span>${T('st_status')}</span><span>${stats.status}</span></div>
+      <div class="stats-row"><span>${T('st_date')}</span><span>${stats.sent_at ? stats.sent_at.slice(0,16).replace('T',' ') : '-'}</span></div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:10px;text-align:right">${T('st_auto')}</div>
     `;
   };
 
@@ -546,7 +550,7 @@ async function loadLandings() {
   const pages = await api('GET', '/landing');
   if (!pages) return;
   const c = document.getElementById('landing-container');
-  if (!pages.length) { c.innerHTML = '<div class="empty-state"><strong>Sin landing pages</strong><p>Crea una página para captar clientes nuevos</p></div>'; return; }
+  if (!pages.length) { c.innerHTML = '<div class="empty-state"><strong>' + T('lp_empty_t') + '</strong><p>' + T('lp_empty_s') + '</p></div>'; return; }
   c.innerHTML = pages.map(p => `
     <div class="list-card">
       <div class="list-info">
@@ -575,7 +579,7 @@ async function openLandingModal() {
 
 document.getElementById('new-landing-btn').addEventListener('click', async () => {
   editingLandingId = null; lpImageUrl = null;
-  document.getElementById('landing-modal-title').textContent = 'Nueva landing';
+  document.getElementById('landing-modal-title').textContent = T('lp_new');
   ['lp-title','lp-subtitle','lp-body','lp-button','lp-welcome-from','lp-welcome-subject','lp-welcome-html'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('lp-color').value = '#2563eb';
   document.getElementById('lp-img-name').textContent = '';
@@ -626,7 +630,7 @@ async function editLanding(id) {
   const p = (pages || []).find(x => x.id === id);
   if (!p) return;
   editingLandingId = id; lpImageUrl = p.image_url || null;
-  document.getElementById('landing-modal-title').textContent = 'Editar landing';
+  document.getElementById('landing-modal-title').textContent = T('lp_edit');
   await openLandingModal();
   document.getElementById('lp-title').value = p.title || '';
   document.getElementById('lp-subtitle').value = p.subtitle || '';
@@ -769,9 +773,9 @@ document.getElementById('pdf-file-input').addEventListener('change', async (e) =
 
 // Vista previa (escritorio / celular)
 function buildPreviewHtml() {
-  let html = document.getElementById('c-body').value || '<p style="font-family:Arial;padding:24px;color:#888">(El correo está vacío. Diseña o escribe el contenido.)</p>';
+  let html = document.getElementById('c-body').value || '<p style="font-family:Arial;padding:24px;color:#888">' + T('prev_empty') + '</p>';
   html = html.replace(/{{nombre}}/gi, 'Cliente');
-  html = html.replace(/{{unsubscribe_link}}/gi, '<a href="#" style="color:#999;font-size:12px;text-decoration:none">Cancelar suscripción</a>');
+  html = html.replace(/{{unsubscribe_link}}/gi, '<a href="#" style="color:#999;font-size:12px;text-decoration:none">' + T('prev_unsub') + '</a>');
   return html;
 }
 function setPreviewWidth(mode) {

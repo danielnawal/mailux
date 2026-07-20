@@ -1,8 +1,14 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import db from '../db.js';
 import { handleSESBounce, handleSESComplaint } from '../services/bounce-handler.js';
 
 const router = Router();
+
+// AWS SNS envía sus notificaciones con Content-Type: text/plain (no application/json),
+// por lo que el express.json() global no las parsea y el cuerpo llega vacío.
+// Este parser, solo para /webhooks, acepta cualquier content-type. El guard interno
+// req._body de body-parser evita re-parsear lo que el parser global ya procesó.
+router.use(express.json({ type: '*/*', limit: '5mb' }));
 
 // Validación básica de origen SNS
 function validateSNSMessage(req) {

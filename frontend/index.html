@@ -15,12 +15,13 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
+    <div style="text-align:right;margin-bottom:4px"><select class="lang-sel" onchange="setLang(this.value)" title="Idioma / Language" style="font-size:13px;padding:4px 6px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#111;cursor:pointer"><option value="es">ES</option><option value="pt">PT</option><option value="en">EN</option></select></div>
     <div class="login-logo">Mailux</div>
-    <p class="login-sub">Plataforma de email marketing</p>
+    <p class="login-sub" data-i18n="login_sub">Plataforma de email marketing</p>
     <form id="login-form">
-      <div class="field"><label>Correo</label><input type="email" id="login-email" required></div>
-      <div class="field"><label>Contraseña</label><input type="password" id="login-pass" required></div>
-      <button type="submit" class="btn-primary" id="login-btn">Ingresar</button>
+      <div class="field"><label data-i18n="f_email">Correo</label><input type="email" id="login-email" required></div>
+      <div class="field"><label data-i18n="f_pass">Contraseña</label><input type="password" id="login-pass" required></div>
+      <button type="submit" class="btn-primary" id="login-btn" data-i18n="login_btn">Ingresar</button>
       <p id="login-error" class="error-msg"></p>
     </form>
   </div>
@@ -32,34 +33,35 @@
     <div class="sidebar-logo">Mailux</div>
     <nav>
       <a href="#" class="nav-item active" data-page="dashboard">
-        <span class="nav-icon">&#9632;</span> Dashboard
+        <span class="nav-icon">&#9632;</span> <span data-i18n="nav_dashboard">Dashboard</span>
       </a>
       <a href="#" class="nav-item" data-page="lists">
-        <span class="nav-icon">&#9632;</span> Listas
+        <span class="nav-icon">&#9632;</span> <span data-i18n="nav_lists">Listas</span>
       </a>
       <a href="#" class="nav-item" data-page="campaigns">
-        <span class="nav-icon">&#9632;</span> Campañas
+        <span class="nav-icon">&#9632;</span> <span data-i18n="nav_campaigns">Campañas</span>
       </a>
       <a href="#" class="nav-item" data-page="landing">
-        <span class="nav-icon">&#9632;</span> Landing pages
+        <span class="nav-icon">&#9632;</span> <span data-i18n="nav_landing">Landing pages</span>
       </a>
     </nav>
     <div class="sidebar-footer">
       <span id="user-email-display"></span>
-      <a href="/manual.html" class="btn-ghost" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px; padding:8px 12px;">📚 Manual</a>
-      <button class="btn-ghost" id="logout-btn">Salir</button>
+      <select class="lang-sel" onchange="setLang(this.value)" title="Idioma / Language" style="display:block;width:100%;margin-bottom:10px;font-size:13px;padding:7px 8px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#111;cursor:pointer"><option value="es">Español</option><option value="pt">Português</option><option value="en">English</option></select>
+      <a href="/manual.html" class="btn-ghost" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px; padding:8px 12px;">📚 <span data-i18n="nav_manual">Manual</span></a>
+      <button class="btn-ghost" id="logout-btn" data-i18n="logout">Salir</button>
     </div>
   </aside>
 
   <main class="main-content">
     <!-- DASHBOARD -->
     <section id="page-dashboard" class="page active">
-      <h1>Dashboard</h1>
+      <h1 data-i18n="dash_title">Dashboard</h1>
       <div class="stats-grid" id="stats-grid"></div>
       <div class="card" style="margin-top:24px">
-        <h2>Campañas recientes</h2>
+        <h2 data-i18n="dash_recent">Campañas recientes</h2>
         <table class="table" id="recent-table">
-          <thead><tr><th>Campaña</th><th>Asunto</th><th>Enviados</th><th>Fallidos</th><th>Fecha</th></tr></thead>
+          <thead><tr><th data-i18n="th_campaign">Campaña</th><th data-i18n="th_subject">Asunto</th><th data-i18n="th_sent">Enviados</th><th data-i18n="th_failed">Fallidos</th><th data-i18n="th_date">Fecha</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -68,19 +70,19 @@
     <!-- LISTAS -->
     <section id="page-lists" class="page">
       <div class="page-header">
-        <h1>Listas de contactos</h1>
-        <button class="btn-primary" id="new-list-btn">+ Nueva lista</button>
+        <h1 data-i18n="lists_title">Listas de contactos</h1>
+        <button class="btn-primary" id="new-list-btn" data-i18n="lists_new">+ Nueva lista</button>
       </div>
       <div id="lists-container"></div>
 
       <!-- Modal nueva lista -->
       <div id="modal-new-list" class="modal" style="display:none">
         <div class="modal-box">
-          <h2>Nueva lista</h2>
-          <div class="field"><label>Nombre</label><input type="text" id="new-list-name" placeholder="Ej: Clientes enero 2024"></div>
+          <h2 data-i18n="nl_title">Nueva lista</h2>
+          <div class="field"><label data-i18n="nl_name">Nombre</label><input type="text" id="new-list-name" data-i18n-ph="nl_name_ph" placeholder="Ej: Clientes enero 2024"></div>
           <div class="modal-actions">
-            <button class="btn-ghost" id="cancel-new-list">Cancelar</button>
-            <button class="btn-primary" id="save-new-list">Crear</button>
+            <button class="btn-ghost" id="cancel-new-list" data-i18n="cancel">Cancelar</button>
+            <button class="btn-primary" id="save-new-list" data-i18n="create">Crear</button>
           </div>
         </div>
       </div>
@@ -88,24 +90,24 @@
       <!-- Modal subir contactos -->
       <div id="modal-upload" class="modal" style="display:none">
         <div class="modal-box">
-          <h2>Agregar contactos</h2>
-          <p class="hint">Sube un archivo <code>CSV</code> o <code>Excel</code> (.xlsx), o pega los correos directo (uno por línea). Las mayúsculas se pasan a minúsculas solas y se valida que el dominio exista para no rebotar.</p>
+          <h2 data-i18n="up_title">Agregar contactos</h2>
+          <p class="hint" data-i18n="up_hint">Sube un archivo <code>CSV</code> o <code>Excel</code> (.xlsx), o pega los correos directo (uno por línea). Las mayúsculas se pasan a minúsculas solas y se valida que el dominio exista para no rebotar.</p>
 
           <div class="field">
-            <label>Opción 1 — Archivo CSV o Excel</label>
+            <label data-i18n="up_opt1">Opción 1 — Archivo CSV o Excel</label>
             <input type="file" id="csv-file" accept=".csv,.xls,.xlsx">
-            <p class="hint">Detecta solo las columnas de correo y nombre, en cualquier orden.</p>
+            <p class="hint" data-i18n="up_opt1_hint">Detecta solo las columnas de correo y nombre, en cualquier orden.</p>
           </div>
 
           <div class="field">
-            <label>Opción 2 — Pegar correos</label>
-            <textarea id="paste-emails" rows="6" placeholder="Un correo por línea. Acepta:&#10;juan@empresa.com&#10;Maria Lopez, maria@empresa.com&#10;Pega columnas desde Excel (nombre y correo)"></textarea>
+            <label data-i18n="up_opt2">Opción 2 — Pegar correos</label>
+            <textarea id="paste-emails" rows="6" data-i18n-ph="up_paste_ph" placeholder="Un correo por línea. Acepta:&#10;juan@empresa.com&#10;Maria Lopez, maria@empresa.com&#10;Pega columnas desde Excel (nombre y correo)"></textarea>
           </div>
 
           <div id="upload-result"></div>
           <div class="modal-actions">
-            <button class="btn-ghost" id="cancel-upload">Cancelar</button>
-            <button class="btn-primary" id="do-upload">Agregar</button>
+            <button class="btn-ghost" id="cancel-upload" data-i18n="cancel">Cancelar</button>
+            <button class="btn-primary" id="do-upload" data-i18n="add">Agregar</button>
           </div>
         </div>
       </div>
@@ -113,13 +115,13 @@
       <!-- Modal ver / administrar contactos -->
       <div id="modal-contacts" class="modal" style="display:none">
         <div class="modal-box modal-xl">
-          <h2 id="contacts-title">Contactos</h2>
+          <h2 id="contacts-title" data-i18n="contacts_title">Contactos</h2>
           <div id="contacts-filters" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
           <div id="contacts-bulk" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px"></div>
           <div id="contacts-list" style="overflow:auto;border:1px solid #e5e7eb;border-radius:8px"></div>
           <p class="hint" id="contacts-note" style="margin-top:8px"></p>
           <div class="modal-actions">
-            <button class="btn-ghost" id="close-contacts">Cerrar</button>
+            <button class="btn-ghost" id="close-contacts" data-i18n="close">Cerrar</button>
           </div>
         </div>
       </div>
@@ -128,53 +130,53 @@
     <!-- CAMPAÑAS -->
     <section id="page-campaigns" class="page">
       <div class="page-header">
-        <h1>Campañas</h1>
-        <button class="btn-primary" id="new-campaign-btn">+ Nueva campaña</button>
+        <h1 data-i18n="camp_title">Campañas</h1>
+        <button class="btn-primary" id="new-campaign-btn" data-i18n="camp_new">+ Nueva campaña</button>
       </div>
       <div id="campaigns-container"></div>
 
       <!-- Modal nueva campaña -->
       <div id="modal-new-campaign" class="modal" style="display:none">
         <div class="modal-box modal-wide">
-          <h2>Nueva campaña</h2>
+          <h2 data-i18n="nc_title">Nueva campaña</h2>
           <div class="form-grid">
-            <div class="field"><label>Nombre interno</label><input type="text" id="c-name" placeholder="Campaña enero 2024"></div>
-            <div class="field"><label>Usar plantilla</label>
+            <div class="field"><label data-i18n="nc_name">Nombre interno</label><input type="text" id="c-name" data-i18n-ph="nc_name_ph" placeholder="Campaña enero 2024"></div>
+            <div class="field"><label data-i18n="nc_template">Usar plantilla</label>
               <select id="c-template">
-                <option value="">-- Ninguna (en blanco) --</option>
+                <option value="" data-i18n="nc_template_none">-- Ninguna (en blanco) --</option>
               </select>
-              <p class="hint" id="template-hint" style="display:none;color:#0066cc;font-size:12px;">El cuerpo del correo se precargará con esta plantilla</p>
+              <p class="hint" id="template-hint" style="display:none;color:#0066cc;font-size:12px;" data-i18n="nc_template_hint">El cuerpo del correo se precargará con esta plantilla</p>
             </div>
-            <div class="field"><label>Lista de contactos</label>
-              <select id="c-list"><option value="">-- Seleccionar --</option></select>
+            <div class="field"><label data-i18n="nc_list">Lista de contactos</label>
+              <select id="c-list"><option value="" data-i18n="opt_select">-- Seleccionar --</option></select>
             </div>
-            <div class="field"><label>Asunto</label><input type="text" id="c-subject" placeholder="Asunto del correo"></div>
-            <div class="field"><label>Nombre del remitente</label><input type="text" id="c-from-name" placeholder="Mi Empresa"></div>
-            <div class="field field-full"><label>Correo del remitente</label><input type="email" id="c-from-email" placeholder="hola@tudominio.com"></div>
+            <div class="field"><label data-i18n="nc_subject">Asunto</label><input type="text" id="c-subject" data-i18n-ph="nc_subject_ph" placeholder="Asunto del correo"></div>
+            <div class="field"><label data-i18n="nc_from_name">Nombre del remitente</label><input type="text" id="c-from-name" data-i18n-ph="nc_from_name_ph" placeholder="Mi Empresa"></div>
+            <div class="field field-full"><label data-i18n="nc_from_email">Correo del remitente</label><input type="email" id="c-from-email" placeholder="hola@tudominio.com"></div>
             <div class="field field-full">
-              <label>Contenido del correo</label>
+              <label data-i18n="nc_content">Contenido del correo</label>
               <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
-                <button type="button" class="btn-primary btn-sm" id="open-designer">Diseñar con bloques (imágenes, botones, PDF)</button>
-                <button type="button" class="btn-ghost btn-sm" id="preview-email">Vista previa</button>
-                <button type="button" class="btn-ghost btn-sm" id="test-email">Enviar prueba a mi correo</button>
+                <button type="button" class="btn-primary btn-sm" id="open-designer" data-i18n="nc_design">Diseñar con bloques (imágenes, botones, PDF)</button>
+                <button type="button" class="btn-ghost btn-sm" id="preview-email" data-i18n="nc_preview">Vista previa</button>
+                <button type="button" class="btn-ghost btn-sm" id="test-email" data-i18n="nc_test">Enviar prueba a mi correo</button>
               </div>
-              <p class="hint">Diseña arrastrando bloques (sale responsive solo), o edita el HTML directo abajo. Usa <code>{{nombre}}</code> para personalizar con el nombre del contacto; <code>{{unsubscribe_link}}</code> agrega el enlace de baja (si no, se añade al pie).</p>
-              <textarea id="c-body" rows="8" placeholder="<h1>Hola {{nombre}}</h1><p>Tu mensaje aquí...</p>"></textarea>
+              <p class="hint" data-i18n="nc_content_hint">Diseña arrastrando bloques (sale responsive solo), o edita el HTML directo abajo. Usa <code>{{nombre}}</code> para personalizar con el nombre del contacto; <code>{{unsubscribe_link}}</code> agrega el enlace de baja (si no, se añade al pie).</p>
+              <textarea id="c-body" rows="8" data-i18n-ph="nc_body_ph" placeholder="<h1>Hola {{nombre}}</h1><p>Tu mensaje aquí...</p>"></textarea>
             </div>
-            <div class="field"><label>Programar envío (opcional)</label><input type="datetime-local" id="c-schedule"></div>
+            <div class="field"><label data-i18n="nc_schedule">Programar envío (opcional)</label><input type="datetime-local" id="c-schedule"></div>
             <div class="field field-full">
-              <label>Segmento (opcional) — enviar solo a quienes cumplan</label>
+              <label data-i18n="nc_segment">Segmento (opcional) — enviar solo a quienes cumplan</label>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <input type="text" id="c-seg-key" placeholder="campo (ej: ciudad)" style="flex:1;min-width:140px">
+                <input type="text" id="c-seg-key" data-i18n-ph="nc_seg_key_ph" placeholder="campo (ej: ciudad)" style="flex:1;min-width:140px">
                 <span style="align-self:center">=</span>
-                <input type="text" id="c-seg-value" placeholder="valor (ej: Bogota)" style="flex:1;min-width:140px">
+                <input type="text" id="c-seg-value" data-i18n-ph="nc_seg_value_ph" placeholder="valor (ej: Bogota)" style="flex:1;min-width:140px">
               </div>
-              <p class="hint" id="c-fields-hint">Campos disponibles de la lista: (elige una lista). Úsalos también en el correo como <code>{{campo}}</code>.</p>
+              <p class="hint" id="c-fields-hint" data-i18n="nc_fields_hint">Campos disponibles de la lista: (elige una lista). Úsalos también en el correo como <code>{{campo}}</code>.</p>
             </div>
           </div>
           <div class="modal-actions">
-            <button class="btn-ghost" id="cancel-new-campaign">Cancelar</button>
-            <button class="btn-primary" id="save-new-campaign">Guardar borrador</button>
+            <button class="btn-ghost" id="cancel-new-campaign" data-i18n="cancel">Cancelar</button>
+            <button class="btn-primary" id="save-new-campaign" data-i18n="nc_save">Guardar borrador</button>
           </div>
         </div>
       </div>
@@ -185,7 +187,7 @@
           <h2 id="stats-title">Estadísticas</h2>
           <div id="stats-content"></div>
           <div class="modal-actions">
-            <button class="btn-ghost" id="close-stats">Cerrar</button>
+            <button class="btn-ghost" id="close-stats" data-i18n="close">Cerrar</button>
           </div>
         </div>
       </div>
@@ -194,38 +196,38 @@
     <!-- LANDING PAGES -->
     <section id="page-landing" class="page">
       <div class="page-header">
-        <h1>Landing pages</h1>
-        <button class="btn-primary" id="new-landing-btn">+ Nueva landing</button>
+        <h1 data-i18n="land_title">Landing pages</h1>
+        <button class="btn-primary" id="new-landing-btn" data-i18n="land_new">+ Nueva landing</button>
       </div>
-      <p class="hint" style="margin-bottom:14px">Páginas públicas con un formulario para captar clientes nuevos: el que se registra entra solo a la lista que elijas (con validación anti-rebote).</p>
+      <p class="hint" style="margin-bottom:14px" data-i18n="land_hint">Páginas públicas con un formulario para captar clientes nuevos: el que se registra entra solo a la lista que elijas (con validación anti-rebote).</p>
       <div id="landing-container"></div>
 
       <div id="modal-landing" class="modal" style="display:none">
         <div class="modal-box modal-wide">
-          <h2 id="landing-modal-title">Nueva landing</h2>
+          <h2 id="landing-modal-title" data-i18n="lp_new">Nueva landing</h2>
           <div class="form-grid">
-            <div class="field"><label>Título</label><input type="text" id="lp-title" placeholder="Suscríbete a nuestras ofertas"></div>
-            <div class="field"><label>Lista donde entran los registros</label><select id="lp-list"><option value="">-- Seleccionar --</option></select></div>
-            <div class="field field-full"><label>Subtítulo</label><input type="text" id="lp-subtitle" placeholder="Recibe promociones y novedades"></div>
-            <div class="field field-full"><label>Texto / descripción</label><textarea id="lp-body" rows="4" placeholder="Déjanos tu correo y entérate primero de todo."></textarea></div>
-            <div class="field"><label>Texto del botón</label><input type="text" id="lp-button" placeholder="Suscribirme"></div>
-            <div class="field"><label>Color</label><input type="color" id="lp-color" value="#2563eb" style="height:42px;padding:4px"></div>
-            <div class="field field-full"><label>Imagen (opcional)</label>
+            <div class="field"><label data-i18n="lp_title">Título</label><input type="text" id="lp-title" data-i18n-ph="lp_title_ph" placeholder="Suscríbete a nuestras ofertas"></div>
+            <div class="field"><label data-i18n="lp_list">Lista donde entran los registros</label><select id="lp-list"><option value="" data-i18n="opt_select">-- Seleccionar --</option></select></div>
+            <div class="field field-full"><label data-i18n="lp_subtitle">Subtítulo</label><input type="text" id="lp-subtitle" data-i18n-ph="lp_subtitle_ph" placeholder="Recibe promociones y novedades"></div>
+            <div class="field field-full"><label data-i18n="lp_body">Texto / descripción</label><textarea id="lp-body" rows="4" data-i18n-ph="lp_body_ph" placeholder="Déjanos tu correo y entérate primero de todo."></textarea></div>
+            <div class="field"><label data-i18n="lp_button">Texto del botón</label><input type="text" id="lp-button" data-i18n-ph="lp_button_ph" placeholder="Suscribirme"></div>
+            <div class="field"><label data-i18n="lp_color">Color</label><input type="color" id="lp-color" value="#2563eb" style="height:42px;padding:4px"></div>
+            <div class="field field-full"><label data-i18n="lp_image">Imagen (opcional)</label>
               <div style="display:flex;gap:8px;align-items:center">
-                <button type="button" class="btn-ghost btn-sm" id="lp-img-btn">Subir imagen</button>
+                <button type="button" class="btn-ghost btn-sm" id="lp-img-btn" data-i18n="lp_upload">Subir imagen</button>
                 <span id="lp-img-name" class="hint"></span>
               </div>
             </div>
             <div class="field field-full" style="border-top:1px solid #e5e7eb;padding-top:12px;margin-top:4px">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600"><input type="checkbox" id="lp-welcome"> Enviar correo de bienvenida automático al registrarse</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600"><input type="checkbox" id="lp-welcome"> <span data-i18n="lp_welcome">Enviar correo de bienvenida automático al registrarse</span></label>
             </div>
-            <div class="field"><label>De (remitente verificado)</label><input type="email" id="lp-welcome-from" placeholder="comercial@starlinkgps.net"></div>
-            <div class="field"><label>Asunto de bienvenida</label><input type="text" id="lp-welcome-subject" placeholder="¡Gracias por suscribirte!"></div>
-            <div class="field field-full"><label>Mensaje de bienvenida</label><textarea id="lp-welcome-html" rows="3" placeholder="<p>Hola {{nombre}}, gracias por registrarte. Pronto recibirás nuestras novedades.</p>"></textarea></div>
+            <div class="field"><label data-i18n="lp_welcome_from">De (remitente verificado)</label><input type="email" id="lp-welcome-from" placeholder="comercial@starlinkgps.net"></div>
+            <div class="field"><label data-i18n="lp_welcome_subject">Asunto de bienvenida</label><input type="text" id="lp-welcome-subject" data-i18n-ph="lp_welcome_subject_ph" placeholder="¡Gracias por suscribirte!"></div>
+            <div class="field field-full"><label data-i18n="lp_welcome_msg">Mensaje de bienvenida</label><textarea id="lp-welcome-html" rows="3" data-i18n-ph="lp_welcome_msg_ph" placeholder="<p>Hola {{nombre}}, gracias por registrarte. Pronto recibirás nuestras novedades.</p>"></textarea></div>
           </div>
           <div class="modal-actions">
-            <button class="btn-ghost" id="cancel-landing">Cancelar</button>
-            <button class="btn-primary" id="save-landing">Guardar y publicar</button>
+            <button class="btn-ghost" id="cancel-landing" data-i18n="cancel">Cancelar</button>
+            <button class="btn-primary" id="save-landing" data-i18n="lp_save">Guardar y publicar</button>
           </div>
         </div>
       </div>
@@ -237,11 +239,11 @@
 <!-- Editor de bloques (pantalla completa) -->
 <div id="designer" style="display:none;position:fixed;inset:0;z-index:200;background:#fff;flex-direction:column">
   <div style="display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid #e5e7eb;align-items:center">
-    <strong style="margin-right:auto;font-size:15px">Diseñar correo</strong>
-    <button type="button" class="btn-ghost btn-sm" id="designer-img">Insertar imagen</button>
-    <button type="button" class="btn-ghost btn-sm" id="designer-pdf">Insertar PDF (botón de descarga)</button>
-    <button type="button" class="btn-ghost btn-sm" id="designer-cancel">Cancelar</button>
-    <button type="button" class="btn-primary btn-sm" id="designer-save">Guardar diseño</button>
+    <strong style="margin-right:auto;font-size:15px" data-i18n="dz_title">Diseñar correo</strong>
+    <button type="button" class="btn-ghost btn-sm" id="designer-img" data-i18n="dz_img">Insertar imagen</button>
+    <button type="button" class="btn-ghost btn-sm" id="designer-pdf" data-i18n="dz_pdf">Insertar PDF (botón de descarga)</button>
+    <button type="button" class="btn-ghost btn-sm" id="designer-cancel" data-i18n="cancel">Cancelar</button>
+    <button type="button" class="btn-primary btn-sm" id="designer-save" data-i18n="dz_save">Guardar diseño</button>
   </div>
   <div id="gjs" style="flex:1;overflow:hidden"></div>
 </div>
@@ -250,15 +252,15 @@
 <div id="modal-preview" class="modal" style="display:none">
   <div class="modal-box modal-xl">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <h2 style="margin:0;margin-right:auto">Vista previa</h2>
-      <button type="button" class="btn-sm btn-ghost" id="preview-desktop">Escritorio</button>
-      <button type="button" class="btn-sm btn-ghost" id="preview-mobile">Celular</button>
+      <h2 style="margin:0;margin-right:auto" data-i18n="pv_title">Vista previa</h2>
+      <button type="button" class="btn-sm btn-ghost" id="preview-desktop" data-i18n="pv_desktop">Escritorio</button>
+      <button type="button" class="btn-sm btn-ghost" id="preview-mobile" data-i18n="pv_mobile">Celular</button>
     </div>
     <div style="background:#f1f5f9;padding:16px;border-radius:10px;display:flex;justify-content:center">
       <iframe id="preview-frame" style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;width:100%;height:60vh;transition:width .2s"></iframe>
     </div>
     <div class="modal-actions">
-      <button type="button" class="btn-ghost" id="close-preview">Cerrar</button>
+      <button type="button" class="btn-ghost" id="close-preview" data-i18n="close">Cerrar</button>
     </div>
   </div>
 </div>
@@ -266,6 +268,321 @@
 <input type="file" id="pdf-file-input" accept="application/pdf" style="display:none">
 <input type="file" id="img-file-input" accept="image/*" style="display:none">
 
-<script src="/assets/js/app.js?v=20260617g"></script>
+<!-- ── i18n ES / PT-BR / EN ─────────────────────────────────────────────────
+     Mecanismo replicado de /opt/assettrack/frontend/index.html (verificado).
+     T() es el traductor GLOBAL (mayúscula) porque app.js usa 't' como variable
+     local en varios sitios y 'const T' local solo dentro de initDesigner().
+     NUNCA traducir valores-dato (claves de estado/rol/tipo, value="" de selects,
+     cuerpos POST/PUT, comparaciones ===): solo texto visible.            -->
+<script>
+const I18N = {
+ es: {
+
+  // i18n vistas dinámicas (migración 2026-06-25)
+  cmp_sandbox:'Envío real por Amazon SES activo. AWS aún en modo sandbox: por ahora solo llegan a correos verificados en tu cuenta SES; cuando AWS apruebe producción podrás enviar a cualquier destinatario.', cmp_empty_t:'Sin campañas aun', cmp_empty_s:'Crea tu primera campaña', cmp_draft:'Borrador', cmp_scheduled:'Programada', cmp_sending:'Enviando...', cmp_paused:'Pausada', cmp_sent:'Enviada', cmp_failed:'Fallida', cmp_subject:'Asunto', cmp_list:'Lista', cmp_nolist:'Sin lista', cmp_sendinfo:'Envío', cmp_sent_n:'enviados', cmp_failed_n:'fallidos de', btn_edit:'Editar', btn_send_now:'Enviar ahora', btn_pause:'Pausar', btn_resume:'Reanudar', btn_cancel:'Cancelar', btn_stats:'Ver estadísticas', btn_duplicate:'Duplicar', st_total:'Total contactos', st_opened:'Aperturas', st_failed:'Fallidos', st_status:'Estado', st_date:'Fecha de envío', st_auto:'Actualizado automáticamente', lp_empty_t:'Sin landing pages', lp_empty_s:'Crea una página para captar clientes nuevos', prev_empty:'(El correo está vacío. Diseña o escribe el contenido.)', prev_unsub:'Cancelar suscripción',
+  // Login
+  login_sub:'Plataforma de email marketing', f_email:'Correo', f_pass:'Contraseña', login_btn:'Ingresar', login_btn_loading:'Ingresando...', login_err:'Error al ingresar',
+  // Nav / sidebar
+  nav_dashboard:'Dashboard', nav_lists:'Listas', nav_campaigns:'Campañas', nav_landing:'Landing pages', nav_manual:'Manual', logout:'Salir',
+  // Botones genéricos
+  cancel:'Cancelar', create:'Crear', add:'Agregar', close:'Cerrar', save:'Guardar', delete:'Eliminar', edit:'Editar', opt_select:'-- Seleccionar --',
+  // Dashboard
+  dash_title:'Dashboard', dash_recent:'Campañas recientes',
+  th_campaign:'Campaña', th_subject:'Asunto', th_sent:'Enviados', th_failed:'Fallidos', th_date:'Fecha',
+  st_lists:'Listas', st_contacts:'Contactos', st_campaigns:'Campañas', st_sent:'Correos enviados', st_suppressed:'Suprimidos (no se envían)',
+  dash_no_campaigns:'Sin campañas enviadas aun',
+  // Listas
+  lists_title:'Listas de contactos', lists_new:'+ Nueva lista',
+  lists_empty_title:'Sin listas aun', lists_empty_sub:'Crea tu primera lista de contactos',
+  lc_invalid:'inválidos (no se envían)', lc_risky:'riesgosos', lc_risky_yes:'(SÍ se envían)', lc_risky_no:'(no se envían)', lc_unvalidated:'sin validar',
+  lc_contacts:'contactos', lc_created:'Creada', lc_include_risky_a:'Incluir los', lc_include_risky_b:'riesgosos en el envío',
+  lc_view_contacts:'Ver contactos', lc_rename:'Editar nombre', lc_add_contacts:'Agregar contactos', lc_validate:'Validar correos',
+  // Modal nueva lista
+  nl_title:'Nueva lista', nl_name:'Nombre', nl_name_ph:'Ej: Clientes enero 2024',
+  // Modal subir contactos
+  up_title:'Agregar contactos',
+  up_hint:'Sube un archivo <code>CSV</code> o <code>Excel</code> (.xlsx), o pega los correos directo (uno por línea). Las mayúsculas se pasan a minúsculas solas y se valida que el dominio exista para no rebotar.',
+  up_opt1:'Opción 1 — Archivo CSV o Excel', up_opt1_hint:'Detecta solo las columnas de correo y nombre, en cualquier orden.',
+  up_opt2:'Opción 2 — Pegar correos',
+  up_paste_ph:'Un correo por línea. Acepta:\njuan@empresa.com\nMaria Lopez, maria@empresa.com\nPega columnas desde Excel (nombre y correo)',
+  up_need_file:'Sube un archivo o pega los correos.', up_processing:'Procesando...', up_err_add:'Error al agregar',
+  ing_added:'contactos agregados', ing_valid:'válidos', ing_risky:'riesgosos', ing_invalid_domain:'dominio inexistente (no se enviarán)', ing_duplicates:'duplicados', ing_bad_format:'formato inválido',
+  // Contactos
+  contacts:'Contactos', contacts_title:'Contactos', contacts_loading:'Cargando...', contacts_empty:'No hay contactos en este filtro.',
+  f_all:'Todos', f_valid:'Válidos', f_risky:'Riesgosos', f_invalid:'Inválidos', f_unvalidated:'Sin validar',
+  th_email:'Correo', th_name:'Nombre', th_state:'Estado',
+  badge_valid:'válido', badge_risky:'riesgoso', badge_invalid:'inválido', badge_unvalidated:'sin validar',
+  sel_all:'Seleccionar todos', del_selected:'Eliminar seleccionados', del_invalid:'Eliminar', del_risky:'Eliminar',
+  contacts_note_a:'contactos en total. Inválidos y riesgosos no se envían (salvo que actives el interruptor de riesgosos).',
+  contacts_note_more:' Se muestran los primeros 1000; usa los filtros para ver el resto.',
+  confirm_del_batch_a:'¿Eliminar', confirm_del_batch_b:'contactos seleccionados? No se puede deshacer.',
+  alert_deleted:'contactos eliminados.', err_del:'No se pudo eliminar',
+  confirm_del_one:'¿Eliminar este contacto de la lista?',
+  confirm_purge_a:'¿Eliminar los', confirm_purge_b:'contactos', confirm_purge_c:'de esta lista? No se puede deshacer.',
+  purge_label_invalid:'inválidos', purge_label_risky:'riesgosos', purge_done:'eliminados.',
+  err_toggle:'No se pudo cambiar',
+  validate_empty:'La lista no tiene contactos para validar.', validate_result_a:'Validación:', validate_result_b:'Los inválidos quedan excluidos automáticamente del envío.', err_validate:'No se pudo validar',
+  rename_prompt:'Nuevo nombre de la lista:', rename_empty:'El nombre no puede estar vacío.', err_rename:'No se pudo renombrar',
+  confirm_del_list_a:'Eliminar la lista', confirm_del_list_b:'y todos sus contactos?',
+  // Campañas
+  camp_title:'Campañas', camp_new:'+ Nueva campaña',
+  camp_sandbox:'Envío real por Amazon SES activo. AWS aún en modo sandbox: por ahora solo llegan a correos verificados en tu cuenta SES; cuando AWS apruebe producción podrás enviar a cualquier destinatario.',
+  camp_empty_title:'Sin campañas aun', camp_empty_sub:'Crea tu primera campaña',
+  status_draft:'Borrador', status_scheduled:'Programada', status_sending:'Enviando...', status_paused:'Pausada', status_sent:'Enviada', status_failed:'Fallida',
+  camp_subject:'Asunto', camp_list:'Lista', camp_no_list:'Sin lista', camp_send_at:'Envío',
+  camp_n_sent:'enviados', camp_n_failed:'fallidos de', camp_send_now:'Enviar ahora', camp_pause:'Pausar', camp_resume:'Reanudar', camp_view_stats:'Ver estadísticas', camp_duplicate:'Duplicar',
+  // Modal nueva campaña
+  nc_title:'Nueva campaña', nc_name:'Nombre interno', nc_name_ph:'Campaña enero 2024',
+  nc_template:'Usar plantilla', nc_template_none:'-- Ninguna (en blanco) --', nc_template_hint:'El cuerpo del correo se precargará con esta plantilla',
+  nc_list:'Lista de contactos', opt_select_list:'-- Seleccionar lista --',
+  nc_subject:'Asunto', nc_subject_ph:'Asunto del correo', nc_from_name:'Nombre del remitente', nc_from_name_ph:'Mi Empresa', nc_from_email:'Correo del remitente',
+  nc_content:'Contenido del correo', nc_design:'Diseñar con bloques (imágenes, botones, PDF)', nc_preview:'Vista previa', nc_test:'Enviar prueba a mi correo',
+  nc_content_hint:'Diseña arrastrando bloques (sale responsive solo), o edita el HTML directo abajo. Usa <code>{{nombre}}</code> para personalizar con el nombre del contacto; <code>{{unsubscribe_link}}</code> agrega el enlace de baja (si no, se añade al pie).',
+  nc_body_ph:'<h1>Hola {{nombre}}</h1><p>Tu mensaje aquí...</p>',
+  nc_schedule:'Programar envío (opcional)',
+  nc_segment:'Segmento (opcional) — enviar solo a quienes cumplan', nc_seg_key_ph:'campo (ej: ciudad)', nc_seg_value_ph:'valor (ej: Bogota)',
+  nc_fields_hint:'Campos disponibles de la lista: (elige una lista). Úsalos también en el correo como <code>{{campo}}</code>.',
+  nc_fields_some:'Campos de esta lista:', nc_fields_some_end:'. Úsalos en el correo o en el segmento.',
+  nc_fields_none:'Esta lista no tiene campos personalizados (solo {{nombre}}). Importa un Excel/CSV con columnas extra para tenerlos.',
+  nc_save:'Guardar borrador', nc_template_loaded_a:'Plantilla', nc_template_loaded_b:'cargada. Reemplaza las variables como {{titulo}}, {{contenido}}, {{cta_url}}, etc.',
+  nc_required:'Completa todos los campos requeridos', err_save:'Error al guardar', err_schedule:'Error al programar',
+  // Campaña acciones / alertas
+  confirm_send_a:'Enviar la campaña', confirm_send_b:'a todos los contactos activos de la lista?', send_started_a:'Envio iniciado:', send_started_b:'correos en cola.', err_send:'Error al enviar',
+  confirm_cancel_sched:'¿Cancelar programación de esta campaña?', sched_cancelled:'Programación cancelada', err_cancel:'Error al cancelar',
+  dup_done_a:'Campaña', dup_done_b:'creada correctamente', err_dup:'Error al duplicar',
+  camp_paused_ok:'Campaña pausada', err_pause:'Error al pausar', camp_resumed_ok:'Envío reanudado', err_resume:'Error al reanudar',
+  camp_not_found:'Campaña no encontrada',
+  // Estadísticas
+  stats_total:'Total contactos', stats_sent:'Enviados', stats_opens:'Aperturas', stats_failed:'Fallidos', stats_status:'Estado', stats_sent_at:'Fecha de envío', stats_auto:'Actualizado automáticamente',
+  // Landing
+  land_title:'Landing pages', land_new:'+ Nueva landing',
+  land_hint:'Páginas públicas con un formulario para captar clientes nuevos: el que se registra entra solo a la lista que elijas (con validación anti-rebote).',
+  land_empty_title:'Sin landing pages', land_empty_sub:'Crea una página para captar clientes nuevos',
+  land_list:'Lista', land_no_list:'sin lista', land_regs:'registros', land_view:'Ver', land_copy:'Copiar enlace',
+  land_copied:'Enlace copiado:', land_copy_prompt:'Copia el enlace:',
+  lp_new:'Nueva landing', lp_edit:'Editar landing',
+  lp_title:'Título', lp_title_ph:'Suscríbete a nuestras ofertas', lp_list:'Lista donde entran los registros',
+  lp_subtitle:'Subtítulo', lp_subtitle_ph:'Recibe promociones y novedades', lp_body:'Texto / descripción', lp_body_ph:'Déjanos tu correo y entérate primero de todo.',
+  lp_button:'Texto del botón', lp_button_ph:'Suscribirme', lp_color:'Color', lp_image:'Imagen (opcional)', lp_upload:'Subir imagen', lp_image_ready:'Imagen lista',
+  lp_welcome:'Enviar correo de bienvenida automático al registrarse', lp_welcome_from:'De (remitente verificado)', lp_welcome_subject:'Asunto de bienvenida', lp_welcome_subject_ph:'¡Gracias por suscribirte!',
+  lp_welcome_msg:'Mensaje de bienvenida', lp_welcome_msg_ph:'<p>Hola {{nombre}}, gracias por registrarte. Pronto recibirás nuestras novedades.</p>',
+  lp_save:'Guardar y publicar', lp_need_title:'Pon un título.', lp_need_list:'Elige a qué lista entran los registros.',
+  lp_published:'Landing publicada. Su enlace público es:', err_save_landing:'No se pudo guardar',
+  confirm_del_landing_a:'¿Eliminar la landing', confirm_del_landing_b:'?',
+  // Editor de bloques / subidas / preview
+  dz_title:'Diseñar correo', dz_img:'Insertar imagen', dz_pdf:'Insertar PDF (botón de descarga)', dz_save:'Guardar diseño',
+  dz_no_editor:'No se pudo cargar el editor visual (revisa la conexión a internet).',
+  dz_uploading:'Subiendo...', dz_no_img:'No se recibió la imagen.', dz_err_img:'No se pudo subir la imagen: ', dz_no_pdf:'No se recibió el PDF.', dz_err_pdf:'No se pudo subir el PDF: ', dz_download:'Descargar',
+  up_no_conn:'No hay conexión con el servidor.', up_too_big:'El archivo es demasiado pesado.', up_expired:'Tu sesión expiró, vuelve a entrar.', up_srv_err:'El servidor respondió con un error',
+  pv_title:'Vista previa', pv_desktop:'Escritorio', pv_mobile:'Celular', pv_empty:'(El correo está vacío. Diseña o escribe el contenido.)', pv_unsub:'Cancelar suscripción', pv_name:'Cliente',
+  test_need:'Completa al menos el remitente, el asunto y el contenido antes de enviar la prueba.',
+  test_prompt:'¿A qué correo envío la prueba?\n(En modo sandbox de AWS debe ser un correo verificado en tu cuenta SES.)',
+  test_err:'No se pudo enviar la prueba'
+ },
+ pt: {
+
+  // i18n vistas dinámicas (migración 2026-06-25)
+  cmp_sandbox:'Envio real pelo Amazon SES ativo. AWS ainda em modo sandbox: por enquanto só chegam a e-mails verificados na sua conta SES; quando a AWS aprovar produção você poderá enviar para qualquer destinatário.', cmp_empty_t:'Sem campanhas ainda', cmp_empty_s:'Crie sua primeira campanha', cmp_draft:'Rascunho', cmp_scheduled:'Agendada', cmp_sending:'Enviando...', cmp_paused:'Pausada', cmp_sent:'Enviada', cmp_failed:'Falhou', cmp_subject:'Assunto', cmp_list:'Lista', cmp_nolist:'Sem lista', cmp_sendinfo:'Envio', cmp_sent_n:'enviados', cmp_failed_n:'falharam de', btn_edit:'Editar', btn_send_now:'Enviar agora', btn_pause:'Pausar', btn_resume:'Retomar', btn_cancel:'Cancelar', btn_stats:'Ver estatísticas', btn_duplicate:'Duplicar', st_total:'Total de contatos', st_opened:'Aberturas', st_failed:'Falharam', st_status:'Status', st_date:'Data de envio', st_auto:'Atualizado automaticamente', lp_empty_t:'Sem landing pages', lp_empty_s:'Crie uma página para captar novos clientes', prev_empty:'(O e-mail está vazio. Desenhe ou escreva o conteúdo.)', prev_unsub:'Cancelar inscrição',
+  login_sub:'Plataforma de email marketing', f_email:'E-mail', f_pass:'Senha', login_btn:'Entrar', login_btn_loading:'Entrando...', login_err:'Erro ao entrar',
+  nav_dashboard:'Painel', nav_lists:'Listas', nav_campaigns:'Campanhas', nav_landing:'Landing pages', nav_manual:'Manual', logout:'Sair',
+  cancel:'Cancelar', create:'Criar', add:'Adicionar', close:'Fechar', save:'Salvar', delete:'Excluir', edit:'Editar', opt_select:'-- Selecionar --',
+  dash_title:'Painel', dash_recent:'Campanhas recentes',
+  th_campaign:'Campanha', th_subject:'Assunto', th_sent:'Enviados', th_failed:'Falharam', th_date:'Data',
+  st_lists:'Listas', st_contacts:'Contatos', st_campaigns:'Campanhas', st_sent:'E-mails enviados', st_suppressed:'Suprimidos (não enviados)',
+  dash_no_campaigns:'Nenhuma campanha enviada ainda',
+  lists_title:'Listas de contatos', lists_new:'+ Nova lista',
+  lists_empty_title:'Nenhuma lista ainda', lists_empty_sub:'Crie sua primeira lista de contatos',
+  lc_invalid:'inválidos (não enviados)', lc_risky:'arriscados', lc_risky_yes:'(SÃO enviados)', lc_risky_no:'(não enviados)', lc_unvalidated:'sem validar',
+  lc_contacts:'contatos', lc_created:'Criada', lc_include_risky_a:'Incluir os', lc_include_risky_b:'arriscados no envio',
+  lc_view_contacts:'Ver contatos', lc_rename:'Editar nome', lc_add_contacts:'Adicionar contatos', lc_validate:'Validar e-mails',
+  nl_title:'Nova lista', nl_name:'Nome', nl_name_ph:'Ex: Clientes janeiro 2024',
+  up_title:'Adicionar contatos',
+  up_hint:'Envie um arquivo <code>CSV</code> ou <code>Excel</code> (.xlsx), ou cole os e-mails direto (um por linha). As maiúsculas viram minúsculas sozinhas e verifica-se que o domínio existe para não voltar.',
+  up_opt1:'Opção 1 — Arquivo CSV ou Excel', up_opt1_hint:'Detecta apenas as colunas de e-mail e nome, em qualquer ordem.',
+  up_opt2:'Opção 2 — Colar e-mails',
+  up_paste_ph:'Um e-mail por linha. Aceita:\njoao@empresa.com\nMaria Lopes, maria@empresa.com\nCole colunas do Excel (nome e e-mail)',
+  up_need_file:'Envie um arquivo ou cole os e-mails.', up_processing:'Processando...', up_err_add:'Erro ao adicionar',
+  ing_added:'contatos adicionados', ing_valid:'válidos', ing_risky:'arriscados', ing_invalid_domain:'domínio inexistente (não serão enviados)', ing_duplicates:'duplicados', ing_bad_format:'formato inválido',
+  contacts:'Contatos', contacts_title:'Contatos', contacts_loading:'Carregando...', contacts_empty:'Não há contatos neste filtro.',
+  f_all:'Todos', f_valid:'Válidos', f_risky:'Arriscados', f_invalid:'Inválidos', f_unvalidated:'Sem validar',
+  th_email:'E-mail', th_name:'Nome', th_state:'Status',
+  badge_valid:'válido', badge_risky:'arriscado', badge_invalid:'inválido', badge_unvalidated:'sem validar',
+  sel_all:'Selecionar todos', del_selected:'Excluir selecionados', del_invalid:'Excluir', del_risky:'Excluir',
+  contacts_note_a:'contatos no total. Inválidos e arriscados não são enviados (a menos que ative o interruptor de arriscados).',
+  contacts_note_more:' Mostrando os primeiros 1000; use os filtros para ver o resto.',
+  confirm_del_batch_a:'Excluir', confirm_del_batch_b:'contatos selecionados? Não pode ser desfeito.',
+  alert_deleted:'contatos excluídos.', err_del:'Não foi possível excluir',
+  confirm_del_one:'Excluir este contato da lista?',
+  confirm_purge_a:'Excluir os', confirm_purge_b:'contatos', confirm_purge_c:'desta lista? Não pode ser desfeito.',
+  purge_label_invalid:'inválidos', purge_label_risky:'arriscados', purge_done:'excluídos.',
+  err_toggle:'Não foi possível alterar',
+  validate_empty:'A lista não tem contatos para validar.', validate_result_a:'Validação:', validate_result_b:'Os inválidos ficam excluídos automaticamente do envio.', err_validate:'Não foi possível validar',
+  rename_prompt:'Novo nome da lista:', rename_empty:'O nome não pode ficar vazio.', err_rename:'Não foi possível renomear',
+  confirm_del_list_a:'Excluir a lista', confirm_del_list_b:'e todos os seus contatos?',
+  camp_title:'Campanhas', camp_new:'+ Nova campanha',
+  camp_sandbox:'Envio real pelo Amazon SES ativo. AWS ainda em modo sandbox: por enquanto só chegam a e-mails verificados na sua conta SES; quando a AWS aprovar produção você poderá enviar para qualquer destinatário.',
+  camp_empty_title:'Nenhuma campanha ainda', camp_empty_sub:'Crie sua primeira campanha',
+  status_draft:'Rascunho', status_scheduled:'Agendada', status_sending:'Enviando...', status_paused:'Pausada', status_sent:'Enviada', status_failed:'Falhou',
+  camp_subject:'Assunto', camp_list:'Lista', camp_no_list:'Sem lista', camp_send_at:'Envio',
+  camp_n_sent:'enviados', camp_n_failed:'falharam de', camp_send_now:'Enviar agora', camp_pause:'Pausar', camp_resume:'Retomar', camp_view_stats:'Ver estatísticas', camp_duplicate:'Duplicar',
+  nc_title:'Nova campanha', nc_name:'Nome interno', nc_name_ph:'Campanha janeiro 2024',
+  nc_template:'Usar modelo', nc_template_none:'-- Nenhum (em branco) --', nc_template_hint:'O corpo do e-mail será pré-carregado com este modelo',
+  nc_list:'Lista de contatos', opt_select_list:'-- Selecionar lista --',
+  nc_subject:'Assunto', nc_subject_ph:'Assunto do e-mail', nc_from_name:'Nome do remetente', nc_from_name_ph:'Minha Empresa', nc_from_email:'E-mail do remetente',
+  nc_content:'Conteúdo do e-mail', nc_design:'Desenhar com blocos (imagens, botões, PDF)', nc_preview:'Pré-visualização', nc_test:'Enviar teste para meu e-mail',
+  nc_content_hint:'Desenhe arrastando blocos (fica responsivo sozinho), ou edite o HTML direto abaixo. Use <code>{{nombre}}</code> para personalizar com o nome do contato; <code>{{unsubscribe_link}}</code> adiciona o link de cancelamento (se não, é adicionado no rodapé).',
+  nc_body_ph:'<h1>Olá {{nombre}}</h1><p>Sua mensagem aqui...</p>',
+  nc_schedule:'Agendar envio (opcional)',
+  nc_segment:'Segmento (opcional) — enviar apenas a quem cumprir', nc_seg_key_ph:'campo (ex: cidade)', nc_seg_value_ph:'valor (ex: Bogota)',
+  nc_fields_hint:'Campos disponíveis da lista: (escolha uma lista). Use-os também no e-mail como <code>{{campo}}</code>.',
+  nc_fields_some:'Campos desta lista:', nc_fields_some_end:'. Use-os no e-mail ou no segmento.',
+  nc_fields_none:'Esta lista não tem campos personalizados (apenas {{nombre}}). Importe um Excel/CSV com colunas extras para tê-los.',
+  nc_save:'Salvar rascunho', nc_template_loaded_a:'Modelo', nc_template_loaded_b:'carregado. Substitua as variáveis como {{titulo}}, {{contenido}}, {{cta_url}}, etc.',
+  nc_required:'Preencha todos os campos obrigatórios', err_save:'Erro ao salvar', err_schedule:'Erro ao agendar',
+  confirm_send_a:'Enviar a campanha', confirm_send_b:'para todos os contatos ativos da lista?', send_started_a:'Envio iniciado:', send_started_b:'e-mails na fila.', err_send:'Erro ao enviar',
+  confirm_cancel_sched:'Cancelar o agendamento desta campanha?', sched_cancelled:'Agendamento cancelado', err_cancel:'Erro ao cancelar',
+  dup_done_a:'Campanha', dup_done_b:'criada com sucesso', err_dup:'Erro ao duplicar',
+  camp_paused_ok:'Campanha pausada', err_pause:'Erro ao pausar', camp_resumed_ok:'Envio retomado', err_resume:'Erro ao retomar',
+  camp_not_found:'Campanha não encontrada',
+  stats_total:'Total de contatos', stats_sent:'Enviados', stats_opens:'Aberturas', stats_failed:'Falharam', stats_status:'Status', stats_sent_at:'Data de envio', stats_auto:'Atualizado automaticamente',
+  land_title:'Landing pages', land_new:'+ Nova landing',
+  land_hint:'Páginas públicas com um formulário para captar novos clientes: quem se cadastra entra direto na lista que você escolher (com validação anti-retorno).',
+  land_empty_title:'Nenhuma landing page', land_empty_sub:'Crie uma página para captar novos clientes',
+  land_list:'Lista', land_no_list:'sem lista', land_regs:'cadastros', land_view:'Ver', land_copy:'Copiar link',
+  land_copied:'Link copiado:', land_copy_prompt:'Copie o link:',
+  lp_new:'Nova landing', lp_edit:'Editar landing',
+  lp_title:'Título', lp_title_ph:'Inscreva-se nas nossas ofertas', lp_list:'Lista onde entram os cadastros',
+  lp_subtitle:'Subtítulo', lp_subtitle_ph:'Receba promoções e novidades', lp_body:'Texto / descrição', lp_body_ph:'Deixe seu e-mail e fique sabendo primeiro de tudo.',
+  lp_button:'Texto do botão', lp_button_ph:'Inscrever-me', lp_color:'Cor', lp_image:'Imagem (opcional)', lp_upload:'Enviar imagem', lp_image_ready:'Imagem pronta',
+  lp_welcome:'Enviar e-mail de boas-vindas automático ao se cadastrar', lp_welcome_from:'De (remetente verificado)', lp_welcome_subject:'Assunto de boas-vindas', lp_welcome_subject_ph:'Obrigado por se inscrever!',
+  lp_welcome_msg:'Mensagem de boas-vindas', lp_welcome_msg_ph:'<p>Olá {{nombre}}, obrigado por se cadastrar. Em breve você receberá nossas novidades.</p>',
+  lp_save:'Salvar e publicar', lp_need_title:'Coloque um título.', lp_need_list:'Escolha em qual lista entram os cadastros.',
+  lp_published:'Landing publicada. Seu link público é:', err_save_landing:'Não foi possível salvar',
+  confirm_del_landing_a:'Excluir a landing', confirm_del_landing_b:'?',
+  dz_title:'Desenhar e-mail', dz_img:'Inserir imagem', dz_pdf:'Inserir PDF (botão de download)', dz_save:'Salvar design',
+  dz_no_editor:'Não foi possível carregar o editor visual (verifique a conexão com a internet).',
+  dz_uploading:'Enviando...', dz_no_img:'Imagem não recebida.', dz_err_img:'Não foi possível enviar a imagem: ', dz_no_pdf:'PDF não recebido.', dz_err_pdf:'Não foi possível enviar o PDF: ', dz_download:'Baixar',
+  up_no_conn:'Sem conexão com o servidor.', up_too_big:'O arquivo é muito pesado.', up_expired:'Sua sessão expirou, entre novamente.', up_srv_err:'O servidor respondeu com um erro',
+  pv_title:'Pré-visualização', pv_desktop:'Computador', pv_mobile:'Celular', pv_empty:'(O e-mail está vazio. Desenhe ou escreva o conteúdo.)', pv_unsub:'Cancelar inscrição', pv_name:'Cliente',
+  test_need:'Preencha pelo menos o remetente, o assunto e o conteúdo antes de enviar o teste.',
+  test_prompt:'Para qual e-mail envio o teste?\n(No modo sandbox da AWS deve ser um e-mail verificado na sua conta SES.)',
+  test_err:'Não foi possível enviar o teste'
+ },
+ en: {
+
+  // i18n vistas dinámicas (migración 2026-06-25)
+  cmp_sandbox:'Real sending via Amazon SES is active. AWS is still in sandbox mode: for now emails only reach verified addresses in your SES account; once AWS approves production you can send to any recipient.', cmp_empty_t:'No campaigns yet', cmp_empty_s:'Create your first campaign', cmp_draft:'Draft', cmp_scheduled:'Scheduled', cmp_sending:'Sending...', cmp_paused:'Paused', cmp_sent:'Sent', cmp_failed:'Failed', cmp_subject:'Subject', cmp_list:'List', cmp_nolist:'No list', cmp_sendinfo:'Send', cmp_sent_n:'sent', cmp_failed_n:'failed of', btn_edit:'Edit', btn_send_now:'Send now', btn_pause:'Pause', btn_resume:'Resume', btn_cancel:'Cancel', btn_stats:'View stats', btn_duplicate:'Duplicate', st_total:'Total contacts', st_opened:'Opens', st_failed:'Failed', st_status:'Status', st_date:'Send date', st_auto:'Auto-updated', lp_empty_t:'No landing pages', lp_empty_s:'Create a page to capture new clients', prev_empty:'(The email is empty. Design or write the content.)', prev_unsub:'Unsubscribe',
+  login_sub:'Email marketing platform', f_email:'Email', f_pass:'Password', login_btn:'Sign in', login_btn_loading:'Signing in...', login_err:'Sign-in error',
+  nav_dashboard:'Dashboard', nav_lists:'Lists', nav_campaigns:'Campaigns', nav_landing:'Landing pages', nav_manual:'Manual', logout:'Sign out',
+  cancel:'Cancel', create:'Create', add:'Add', close:'Close', save:'Save', delete:'Delete', edit:'Edit', opt_select:'-- Select --',
+  dash_title:'Dashboard', dash_recent:'Recent campaigns',
+  th_campaign:'Campaign', th_subject:'Subject', th_sent:'Sent', th_failed:'Failed', th_date:'Date',
+  st_lists:'Lists', st_contacts:'Contacts', st_campaigns:'Campaigns', st_sent:'Emails sent', st_suppressed:'Suppressed (not sent)',
+  dash_no_campaigns:'No campaigns sent yet',
+  lists_title:'Contact lists', lists_new:'+ New list',
+  lists_empty_title:'No lists yet', lists_empty_sub:'Create your first contact list',
+  lc_invalid:'invalid (not sent)', lc_risky:'risky', lc_risky_yes:'(ARE sent)', lc_risky_no:'(not sent)', lc_unvalidated:'unvalidated',
+  lc_contacts:'contacts', lc_created:'Created', lc_include_risky_a:'Include the', lc_include_risky_b:'risky ones in the send',
+  lc_view_contacts:'View contacts', lc_rename:'Edit name', lc_add_contacts:'Add contacts', lc_validate:'Validate emails',
+  nl_title:'New list', nl_name:'Name', nl_name_ph:'E.g.: Customers January 2024',
+  up_title:'Add contacts',
+  up_hint:'Upload a <code>CSV</code> or <code>Excel</code> (.xlsx) file, or paste the emails directly (one per line). Uppercase is lowercased automatically and the domain is checked so it doesn\'t bounce.',
+  up_opt1:'Option 1 — CSV or Excel file', up_opt1_hint:'Detects only the email and name columns, in any order.',
+  up_opt2:'Option 2 — Paste emails',
+  up_paste_ph:'One email per line. Accepts:\njohn@company.com\nMary Lopez, mary@company.com\nPaste columns from Excel (name and email)',
+  up_need_file:'Upload a file or paste the emails.', up_processing:'Processing...', up_err_add:'Error adding',
+  ing_added:'contacts added', ing_valid:'valid', ing_risky:'risky', ing_invalid_domain:'nonexistent domain (will not be sent)', ing_duplicates:'duplicates', ing_bad_format:'invalid format',
+  contacts:'Contacts', contacts_title:'Contacts', contacts_loading:'Loading...', contacts_empty:'No contacts in this filter.',
+  f_all:'All', f_valid:'Valid', f_risky:'Risky', f_invalid:'Invalid', f_unvalidated:'Unvalidated',
+  th_email:'Email', th_name:'Name', th_state:'Status',
+  badge_valid:'valid', badge_risky:'risky', badge_invalid:'invalid', badge_unvalidated:'unvalidated',
+  sel_all:'Select all', del_selected:'Delete selected', del_invalid:'Delete', del_risky:'Delete',
+  contacts_note_a:'contacts in total. Invalid and risky ones are not sent (unless you turn on the risky switch).',
+  contacts_note_more:' Showing the first 1000; use the filters to see the rest.',
+  confirm_del_batch_a:'Delete', confirm_del_batch_b:'selected contacts? This cannot be undone.',
+  alert_deleted:'contacts deleted.', err_del:'Could not delete',
+  confirm_del_one:'Delete this contact from the list?',
+  confirm_purge_a:'Delete the', confirm_purge_b:'contacts', confirm_purge_c:'from this list? This cannot be undone.',
+  purge_label_invalid:'invalid', purge_label_risky:'risky', purge_done:'deleted.',
+  err_toggle:'Could not change',
+  validate_empty:'The list has no contacts to validate.', validate_result_a:'Validation:', validate_result_b:'Invalid ones are automatically excluded from the send.', err_validate:'Could not validate',
+  rename_prompt:'New list name:', rename_empty:'The name cannot be empty.', err_rename:'Could not rename',
+  confirm_del_list_a:'Delete the list', confirm_del_list_b:'and all its contacts?',
+  camp_title:'Campaigns', camp_new:'+ New campaign',
+  camp_sandbox:'Real sending via Amazon SES is active. AWS is still in sandbox mode: for now it only reaches emails verified in your SES account; once AWS approves production you will be able to send to any recipient.',
+  camp_empty_title:'No campaigns yet', camp_empty_sub:'Create your first campaign',
+  status_draft:'Draft', status_scheduled:'Scheduled', status_sending:'Sending...', status_paused:'Paused', status_sent:'Sent', status_failed:'Failed',
+  camp_subject:'Subject', camp_list:'List', camp_no_list:'No list', camp_send_at:'Send',
+  camp_n_sent:'sent', camp_n_failed:'failed of', camp_send_now:'Send now', camp_pause:'Pause', camp_resume:'Resume', camp_view_stats:'View stats', camp_duplicate:'Duplicate',
+  nc_title:'New campaign', nc_name:'Internal name', nc_name_ph:'Campaign January 2024',
+  nc_template:'Use template', nc_template_none:'-- None (blank) --', nc_template_hint:'The email body will be preloaded with this template',
+  nc_list:'Contact list', opt_select_list:'-- Select list --',
+  nc_subject:'Subject', nc_subject_ph:'Email subject', nc_from_name:'Sender name', nc_from_name_ph:'My Company', nc_from_email:'Sender email',
+  nc_content:'Email content', nc_design:'Design with blocks (images, buttons, PDF)', nc_preview:'Preview', nc_test:'Send a test to my email',
+  nc_content_hint:'Design by dragging blocks (it becomes responsive on its own), or edit the HTML directly below. Use <code>{{nombre}}</code> to personalize with the contact name; <code>{{unsubscribe_link}}</code> adds the unsubscribe link (if not, it is added in the footer).',
+  nc_body_ph:'<h1>Hi {{nombre}}</h1><p>Your message here...</p>',
+  nc_schedule:'Schedule send (optional)',
+  nc_segment:'Segment (optional) — send only to those who match', nc_seg_key_ph:'field (e.g.: city)', nc_seg_value_ph:'value (e.g.: Bogota)',
+  nc_fields_hint:'Available fields from the list: (choose a list). Use them in the email too as <code>{{campo}}</code>.',
+  nc_fields_some:'Fields in this list:', nc_fields_some_end:'. Use them in the email or in the segment.',
+  nc_fields_none:'This list has no custom fields (only {{nombre}}). Import an Excel/CSV with extra columns to have them.',
+  nc_save:'Save draft', nc_template_loaded_a:'Template', nc_template_loaded_b:'loaded. Replace the variables like {{titulo}}, {{contenido}}, {{cta_url}}, etc.',
+  nc_required:'Fill in all required fields', err_save:'Error saving', err_schedule:'Error scheduling',
+  confirm_send_a:'Send the campaign', confirm_send_b:'to all active contacts in the list?', send_started_a:'Send started:', send_started_b:'emails queued.', err_send:'Error sending',
+  confirm_cancel_sched:'Cancel the schedule for this campaign?', sched_cancelled:'Schedule cancelled', err_cancel:'Error cancelling',
+  dup_done_a:'Campaign', dup_done_b:'created successfully', err_dup:'Error duplicating',
+  camp_paused_ok:'Campaign paused', err_pause:'Error pausing', camp_resumed_ok:'Send resumed', err_resume:'Error resuming',
+  camp_not_found:'Campaign not found',
+  stats_total:'Total contacts', stats_sent:'Sent', stats_opens:'Opens', stats_failed:'Failed', stats_status:'Status', stats_sent_at:'Send date', stats_auto:'Updated automatically',
+  land_title:'Landing pages', land_new:'+ New landing',
+  land_hint:'Public pages with a form to capture new customers: whoever signs up goes straight into the list you choose (with anti-bounce validation).',
+  land_empty_title:'No landing pages', land_empty_sub:'Create a page to capture new customers',
+  land_list:'List', land_no_list:'no list', land_regs:'sign-ups', land_view:'View', land_copy:'Copy link',
+  land_copied:'Link copied:', land_copy_prompt:'Copy the link:',
+  lp_new:'New landing', lp_edit:'Edit landing',
+  lp_title:'Title', lp_title_ph:'Subscribe to our offers', lp_list:'List where sign-ups go',
+  lp_subtitle:'Subtitle', lp_subtitle_ph:'Get promotions and news', lp_body:'Text / description', lp_body_ph:'Leave us your email and be the first to know everything.',
+  lp_button:'Button text', lp_button_ph:'Subscribe', lp_color:'Color', lp_image:'Image (optional)', lp_upload:'Upload image', lp_image_ready:'Image ready',
+  lp_welcome:'Send an automatic welcome email on sign-up', lp_welcome_from:'From (verified sender)', lp_welcome_subject:'Welcome subject', lp_welcome_subject_ph:'Thanks for subscribing!',
+  lp_welcome_msg:'Welcome message', lp_welcome_msg_ph:'<p>Hi {{nombre}}, thanks for signing up. You will soon receive our news.</p>',
+  lp_save:'Save and publish', lp_need_title:'Add a title.', lp_need_list:'Choose which list sign-ups go into.',
+  lp_published:'Landing published. Its public link is:', err_save_landing:'Could not save',
+  confirm_del_landing_a:'Delete the landing', confirm_del_landing_b:'?',
+  dz_title:'Design email', dz_img:'Insert image', dz_pdf:'Insert PDF (download button)', dz_save:'Save design',
+  dz_no_editor:'Could not load the visual editor (check your internet connection).',
+  dz_uploading:'Uploading...', dz_no_img:'Image not received.', dz_err_img:'Could not upload the image: ', dz_no_pdf:'PDF not received.', dz_err_pdf:'Could not upload the PDF: ', dz_download:'Download',
+  up_no_conn:'No connection to the server.', up_too_big:'The file is too large.', up_expired:'Your session expired, sign in again.', up_srv_err:'The server responded with an error',
+  pv_title:'Preview', pv_desktop:'Desktop', pv_mobile:'Mobile', pv_empty:'(The email is empty. Design or write the content.)', pv_unsub:'Unsubscribe', pv_name:'Customer',
+  test_need:'Fill in at least the sender, the subject and the content before sending the test.',
+  test_prompt:'Which email should I send the test to?\n(In AWS sandbox mode it must be an email verified in your SES account.)',
+  test_err:'Could not send the test'
+ }
+};
+let LANG = (function(){ try { var l = localStorage.getItem('mx_lang'); return I18N[l] ? l : 'es'; } catch(e){ return 'es'; } })();
+// Traductor GLOBAL en mayúscula (T) para no chocar con 't' local de app.js.
+function T(k){ return (I18N[LANG] && I18N[LANG][k]) || I18N.es[k] || k; }
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = T(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.setAttribute('placeholder', T(el.getAttribute('data-i18n-ph'))); });
+  document.querySelectorAll('[data-i18n-title]').forEach(function(el){ el.setAttribute('title', T(el.getAttribute('data-i18n-title'))); });
+  try { document.documentElement.lang = (LANG==='pt'?'pt-BR':LANG==='en'?'en':'es'); } catch(e){}
+  document.querySelectorAll('.lang-sel').forEach(function(s){ s.value = LANG; });
+}
+function setLang(l){
+  LANG = I18N[l] ? l : 'es';
+  try { localStorage.setItem('mx_lang', LANG); } catch(e){}
+  applyStaticI18n();
+  // Re-render de las vistas dinámicas (guardado por token y por que la función exista).
+  try {
+    if (typeof token !== 'undefined' && token) {
+      var active = document.querySelector('.nav-item.active');
+      var page = active ? active.dataset.page : 'dashboard';
+      if (typeof navigateTo === 'function') navigateTo(page);
+    }
+  } catch(e){}
+}
+document.addEventListener('DOMContentLoaded', function(){ try { applyStaticI18n(); } catch(e){} });
+</script>
+<script src="/assets/js/app.js?v=20260623i18n"></script>
 </body>
 </html>
