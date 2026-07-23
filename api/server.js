@@ -8,6 +8,7 @@ import { sendEmail } from './services/ses.js';
 import { detectBounceSpikesByCampaign } from './services/bounce-handler.js';
 import { eligibleContacts } from './services/recipients.js';
 import { personalize } from './services/personalize.js';
+import { processDripCampaigns } from './services/drip.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MAILUX_BASE_URL = process.env.MAILUX_BASE_URL || 'https://mailux.gpssoftwarenumberone.com';
@@ -84,6 +85,10 @@ async function checkScheduledCampaigns() {
 }
 
 setInterval(checkScheduledCampaigns, 60000);
+
+// Cron de envío por GOTEO: revisa cada minuto si hay un lote diario pendiente por enviar.
+// Está auto-protegido (un lote por día por campaña y sin solaparse). Ver services/drip.js.
+setInterval(processDripCampaigns, 60000);
 
 // Cron job para detectar bounce spikes (cada hora)
 function checkBounceSpikes() {

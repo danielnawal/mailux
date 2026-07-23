@@ -345,18 +345,21 @@ async function loadCampaigns() {
   const labels = { draft:T('cmp_draft'), scheduled:T('cmp_scheduled'), sending:T('cmp_sending'), paused:T('cmp_paused'), sent:T('cmp_sent'), failed:T('cmp_failed') };
   container.innerHTML = sandboxNotice + campaigns.map(c => {
     const scheduledInfo = c.scheduled_at ? ` &middot; ${T('cmp_sendinfo')}: ${new Date(c.scheduled_at).toLocaleString()}` : '';
+    const dripInfo = c.daily_limit ? ` &middot; <span style="color:#2563eb;font-weight:600">${T('lbl_drip')}: ${c.daily_limit}${T('drip_perday')}</span>` : '';
     return `
     <div class="campaign-card">
       <div class="campaign-header">
         <div class="campaign-name">${c.name}</div>
         <span class="badge ${badges[c.status]}">${labels[c.status]}</span>
       </div>
-      <div class="campaign-meta">${T('cmp_subject')}: ${c.subject} &middot; ${T('cmp_list')}: ${c.list_name || T('cmp_nolist')}${scheduledInfo} &middot; ${c.created_at.slice(0,10)}</div>
+      <div class="campaign-meta">${T('cmp_subject')}: ${c.subject} &middot; ${T('cmp_list')}: ${c.list_name || T('cmp_nolist')}${scheduledInfo}${dripInfo} &middot; ${c.created_at.slice(0,10)}</div>
       <div class="campaign-footer">
         <div style="font-size:13px;color:#6b7280">${c.sent} ${T('cmp_sent_n')} &middot; ${c.failed} ${T('cmp_failed_n')} ${c.total}</div>
         <div class="campaign-actions">
           ${c.status === 'draft' ? `<button class="btn-ghost btn-sm" onclick="editCampaign(${c.id})">${T('btn_edit')}</button>` : ''}
-          ${c.status === 'draft' ? `<button class="btn-send btn-sm" onclick="sendCampaign(${c.id},'${c.name}')">${T('btn_send_now')}</button>` : ''}
+          ${c.status === 'draft' ? (c.daily_limit
+            ? `<button class="btn-send btn-sm" onclick="startDrip(${c.id},'${(c.name||'').replace(/'/g,"\\'")}')">${T('btn_drip_start')}</button>`
+            : `<button class="btn-send btn-sm" onclick="sendCampaign(${c.id},'${(c.name||'').replace(/'/g,"\\'")}')">${T('btn_send_now')}</button>`) : ''}
           ${c.status === 'sending' ? `<button class="btn-warning btn-sm" onclick="pauseCampaign(${c.id})">${T('btn_pause')}</button>` : ''}
           ${c.status === 'paused' ? `<button class="btn-send btn-sm" onclick="resumeCampaign(${c.id})">${T('btn_resume')}</button>` : ''}
           ${c.status === 'scheduled' ? `<button class="btn-danger btn-sm" onclick="cancelSchedule(${c.id})">${T('btn_cancel')}</button>` : ''}
@@ -378,7 +381,7 @@ document.getElementById('new-campaign-btn').addEventListener('click', async () =
   const templateSelect = document.getElementById('c-template');
   templateSelect.innerHTML = '<option value="">-- Ninguna (en blanco) --</option>' + (templates || []).map(t => `<option value="${t.id}" data-name="${t.name}">${t.name}${t.description ? ' - ' + t.description : ''}</option>`).join('');
 
-  ['c-name','c-subject','c-from-name','c-from-email','c-body','c-template','c-seg-key','c-seg-value'].forEach(id => {
+  ['c-name','c-subject','c-from-name','c-from-email','c-body','c-template','c-seg-key','c-seg-value','c-daily','c-schedule'].forEach(id => {
     if (id === 'c-template') document.getElementById(id).value = '';
     else if (id !== 'c-list') document.getElementById(id).value = '';
   });
@@ -429,7 +432,8 @@ document.getElementById('save-new-campaign').addEventListener('click', async () 
     body_html: document.getElementById('c-body').value,
     list_id: document.getElementById('c-list').value || null,
     segment_key: document.getElementById('c-seg-key').value.trim(),
-    segment_value: document.getElementById('c-seg-value').value.trim()
+    segment_value: document.getElementById('c-seg-value').value.trim(),
+    daily_limit: document.getElementById('c-daily').value.trim() || null
   };
   if (!payload.name || !payload.subject || !payload.from_name || !payload.from_email || !payload.body_html) {
     alert('Completa todos los campos requeridos'); return;
@@ -459,6 +463,13 @@ async function sendCampaign(id, name) {
   const res = await api('POST', `/campaigns/${id}/send`);
   if (res?.ok) { alert(`Envio iniciado: ${res.total} correos en cola.`); loadCampaigns(); }
   else alert(res?.error || 'Error al enviar');
+}
+
+async function startDrip(id, name) {
+  if (!confirm(`Activar el envío por goteo de "${name}"? Enviará el primer lote hoy y seguirá solo cada día hasta terminar la lista.`)) return;
+  const res = await api('POST', `/campaigns/${id}/drip/start`);
+  if (res?.ok) { alert(res.message || 'Goteo activado.'); loadCampaigns(); }
+  else alert(res?.error || 'No se pudo activar el goteo');
 }
 
 async function cancelSchedule(id) {
@@ -505,6 +516,7 @@ async function editCampaign(id) {
   document.getElementById('c-schedule').value = '';
   document.getElementById('c-seg-key').value = campaign.segment_key || '';
   document.getElementById('c-seg-value').value = campaign.segment_value || '';
+  document.getElementById('c-daily').value = campaign.daily_limit || '';
   loadListFields(campaign.list_id);
 
   document.getElementById('modal-new-campaign').style.display = 'flex';

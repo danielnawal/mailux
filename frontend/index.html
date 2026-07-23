@@ -164,6 +164,10 @@
               <textarea id="c-body" rows="8" data-i18n-ph="nc_body_ph" placeholder="<h1>Hola {{nombre}}</h1><p>Tu mensaje aquí...</p>"></textarea>
             </div>
             <div class="field"><label data-i18n="nc_schedule">Programar envío (opcional)</label><input type="datetime-local" id="c-schedule"></div>
+            <div class="field"><label data-i18n="nc_daily">Envío por goteo — máximo por día (opcional)</label>
+              <input type="number" id="c-daily" min="1" step="1" placeholder="300">
+              <p class="hint" data-i18n="nc_daily_hint">Si pones un número (ej. 300), la campaña envía como máximo esa cantidad por día y sigue sola al día siguiente hasta terminar toda la lista. Déjalo vacío para enviar todo de una vez. Recuerda: 300/día es el tope de tu cuenta Brevo.</p>
+            </div>
             <div class="field field-full">
               <label data-i18n="nc_segment">Segmento (opcional) — enviar solo a quienes cumplan</label>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -340,6 +344,9 @@ const I18N = {
   nc_content_hint:'Diseña arrastrando bloques (sale responsive solo), o edita el HTML directo abajo. Usa <code>{{nombre}}</code> para personalizar con el nombre del contacto; <code>{{unsubscribe_link}}</code> agrega el enlace de baja (si no, se añade al pie).',
   nc_body_ph:'<h1>Hola {{nombre}}</h1><p>Tu mensaje aquí...</p>',
   nc_schedule:'Programar envío (opcional)',
+  nc_daily:'Envío por goteo — máximo por día (opcional)',
+  nc_daily_hint:'Si pones un número (ej. 300), la campaña envía como máximo esa cantidad por día y sigue sola al día siguiente hasta terminar toda la lista. Déjalo vacío para enviar todo de una vez. Recuerda: 300/día es el tope de tu cuenta Brevo.',
+  btn_drip_start:'Activar goteo', lbl_drip:'Goteo', drip_perday:'/día', drip_started:'Goteo activado',
   nc_segment:'Segmento (opcional) — enviar solo a quienes cumplan', nc_seg_key_ph:'campo (ej: ciudad)', nc_seg_value_ph:'valor (ej: Bogota)',
   nc_fields_hint:'Campos disponibles de la lista: (elige una lista). Úsalos también en el correo como <code>{{campo}}</code>.',
   nc_fields_some:'Campos de esta lista:', nc_fields_some_end:'. Úsalos en el correo o en el segmento.',
@@ -433,6 +440,8 @@ const I18N = {
   nc_content_hint:'Desenhe arrastando blocos (fica responsivo sozinho), ou edite o HTML direto abaixo. Use <code>{{nombre}}</code> para personalizar com o nome do contato; <code>{{unsubscribe_link}}</code> adiciona o link de cancelamento (se não, é adicionado no rodapé).',
   nc_body_ph:'<h1>Olá {{nombre}}</h1><p>Sua mensagem aqui...</p>',
   nc_schedule:'Agendar envio (opcional)',
+  nc_daily:'Envio gota a gota — máximo por dia (opcional)',
+  nc_daily_hint:'Se colocar um número (ex. 300), a campanha envia no máximo essa quantidade por dia e continua sozinha no dia seguinte até terminar toda a lista. Deixe vazio para enviar tudo de uma vez. Lembre: 300/dia é o limite da sua conta Brevo.',
   nc_segment:'Segmento (opcional) — enviar apenas a quem cumprir', nc_seg_key_ph:'campo (ex: cidade)', nc_seg_value_ph:'valor (ex: Bogota)',
   nc_fields_hint:'Campos disponíveis da lista: (escolha uma lista). Use-os também no e-mail como <code>{{campo}}</code>.',
   nc_fields_some:'Campos desta lista:', nc_fields_some_end:'. Use-os no e-mail ou no segmento.',
@@ -522,6 +531,8 @@ const I18N = {
   nc_content_hint:'Design by dragging blocks (it becomes responsive on its own), or edit the HTML directly below. Use <code>{{nombre}}</code> to personalize with the contact name; <code>{{unsubscribe_link}}</code> adds the unsubscribe link (if not, it is added in the footer).',
   nc_body_ph:'<h1>Hi {{nombre}}</h1><p>Your message here...</p>',
   nc_schedule:'Schedule send (optional)',
+  nc_daily:'Drip sending — max per day (optional)',
+  nc_daily_hint:'If you set a number (e.g. 300), the campaign sends at most that many per day and continues on its own the next day until the whole list is done. Leave empty to send all at once. Remember: 300/day is your Brevo account cap.',
   nc_segment:'Segment (optional) — send only to those who match', nc_seg_key_ph:'field (e.g.: city)', nc_seg_value_ph:'value (e.g.: Bogota)',
   nc_fields_hint:'Available fields from the list: (choose a list). Use them in the email too as <code>{{campo}}</code>.',
   nc_fields_some:'Fields in this list:', nc_fields_some_end:'. Use them in the email or in the segment.',

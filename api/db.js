@@ -146,6 +146,12 @@ catch (err) { if (err.message.includes('no such column')) { console.log('Migrati
 try { db.prepare('SELECT segment_key FROM campaigns LIMIT 1').get(); }
 catch (err) { if (err.message.includes('no such column')) { console.log('Migrating: campaigns.segment_key/value'); db.exec('ALTER TABLE campaigns ADD COLUMN segment_key TEXT;'); db.exec('ALTER TABLE campaigns ADD COLUMN segment_value TEXT;'); } }
 
+// Migration: envío por GOTEO (drip). daily_limit = máximo de correos por día para esta
+// campaña (NULL = envío normal, todo de una vez). last_send_date = fecha (YYYY-MM-DD) del
+// último lote diario ya enviado, para no repetir lote el mismo día y reanudar al siguiente.
+try { db.prepare('SELECT daily_limit FROM campaigns LIMIT 1').get(); }
+catch (err) { if (err.message.includes('no such column')) { console.log('Migrating: campaigns.daily_limit/last_send_date (goteo)'); db.exec('ALTER TABLE campaigns ADD COLUMN daily_limit INTEGER;'); db.exec('ALTER TABLE campaigns ADD COLUMN last_send_date TEXT;'); } }
+
 // Migration: interruptor por lista para incluir o no los correos 'risky' en el envío.
 // Por defecto 0 = NO se envían los riesgosos (más seguro contra sanciones de AWS).
 try {
