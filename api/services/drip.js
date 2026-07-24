@@ -18,6 +18,20 @@ import { sendCampaignEmailToContact } from './campaign-send.js';
 // Tope de la cuenta Brevo por día (toda la plataforma comparte una sola cuenta Brevo).
 const DAILY_ACCOUNT_CAP = parseInt(process.env.BREVO_DAILY_CAP || '300', 10);
 
+// VENTANA HORARIA: el lote diario solo sale dentro de este rango de hora de Colombia.
+// Sin esto, el lote saldría al cambiar el día UTC = 7:00 p.m. en Colombia (mala hora para
+// correo comercial). Por defecto arranca a las 7:30 a.m., para que a las 8, cuando el
+// cliente abre el correo, esté en las primeras casillas de la bandeja.
+// Formato "HH:MM". Se puede cambiar con DRIP_START / DRIP_END, pero OJO: las variables de
+// entorno solo se releen al RECREAR el contenedor (docker compose up -d), no con restart.
+function aMinutos(hhmm, pordefecto) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
+  if (!m) return pordefecto;
+  return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+}
+const INICIO_MIN = aMinutos(process.env.DRIP_START, 7 * 60 + 30);  // 7:30 a.m.
+const FIN_MIN = aMinutos(process.env.DRIP_END, 11 * 60);           // 11:00 a.m.
+
 let running = false;
 
 function todayStr() {
@@ -25,8 +39,21 @@ function todayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
+// Minutos transcurridos del día en Colombia (UTC-5 todo el año: el país no cambia de hora).
+function minutosColombia() {
+  const d = new Date(Date.now() - 5 * 60 * 60 * 1000);
+  return d.getUTCHours() * 60 + d.getUTCMinutes();
+}
+
+export function enVentanaDeEnvio(minutos = minutosColombia()) {
+  return minutos >= INICIO_MIN && minutos < FIN_MIN;
+}
+
 export async function processDripCampaigns() {
   if (running) return; // evita que dos ticks del cron se solapen
+  // Fuera de la ventana de la mañana no se envía nada; el cron vuelve a intentar cada minuto
+  // y el lote del día sale en cuanto entra la ventana.
+  if (!enVentanaDeEnvio()) return;
   running = true;
   try {
     const today = todayStr();

@@ -13,7 +13,9 @@ export function replaceLinksWithTracking(html, campaignId, email) {
     const beforePart = before || '';
     const afterPart = after || '';
     const encodedUrl = encodeURIComponent(url);
-    const trackingUrl = `/api/campaigns/${campaignId}/track-click?url=${encodedUrl}&email=${encodedEmail}`;
+    // URL ABSOLUTA: dentro de un correo no existe página base, así que un enlace relativo
+    // queda muerto en Gmail/Outlook. Mismo criterio que el píxel y el enlace de baja.
+    const trackingUrl = `${MAILUX_BASE_URL}/api/campaigns/${campaignId}/track-click?url=${encodedUrl}&email=${encodedEmail}`;
     return `<a ${beforePart}href="${trackingUrl}"${afterPart}>`;
   });
 }

@@ -152,6 +152,36 @@ catch (err) { if (err.message.includes('no such column')) { console.log('Migrati
 try { db.prepare('SELECT daily_limit FROM campaigns LIMIT 1').get(); }
 catch (err) { if (err.message.includes('no such column')) { console.log('Migrating: campaigns.daily_limit/last_send_date (goteo)'); db.exec('ALTER TABLE campaigns ADD COLUMN daily_limit INTEGER;'); db.exec('ALTER TABLE campaigns ADD COLUMN last_send_date TEXT;'); } }
 
+// Migration: permitir los estados 'paused' y 'scheduled' en campaigns.status.
+// La tabla se creó con un CHECK que solo aceptaba draft/sending/sent/failed, pero los endpoints
+// de Pausar y Programar guardan 'paused' y 'scheduled' -> fallaban con error 500 y una campaña
+// en marcha NO se podía detener. SQLite no deja modificar un CHECK: hay que reconstruir la tabla
+// copiando los datos. Idempotente: solo actúa si el CHECK viejo sigue presente.
+try {
+  const sqlCampaigns = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='campaigns'").get()?.sql || '';
+  const checkViejo = "CHECK(status IN ('draft','sending','sent','failed'))";
+  if (sqlCampaigns.includes(checkViejo)) {
+    console.log('Migrating: campaigns.status ahora admite paused/scheduled');
+    const columnas = db.prepare('PRAGMA table_info(campaigns)').all().map(c => c.name).join(', ');
+    const sqlNueva = sqlCampaigns
+      .replace('CREATE TABLE campaigns', 'CREATE TABLE campaigns_nueva')
+      .replace(checkViejo, "CHECK(status IN ('draft','scheduled','sending','paused','sent','failed'))");
+    db.pragma('foreign_keys = OFF');
+    db.pragma('legacy_alter_table = ON');
+    db.exec('BEGIN');
+    db.exec(sqlNueva);
+    db.exec(`INSERT INTO campaigns_nueva (${columnas}) SELECT ${columnas} FROM campaigns`);
+    db.exec('DROP TABLE campaigns');
+    db.exec('ALTER TABLE campaigns_nueva RENAME TO campaigns');
+    db.exec('COMMIT');
+    db.pragma('legacy_alter_table = OFF');
+    db.pragma('foreign_keys = ON');
+    console.log('Migrating: campaigns.status OK');
+  }
+} catch (err) {
+  console.error('Migration campaigns.status FALLÓ:', err.message);
+}
+
 // Migration: interruptor por lista para incluir o no los correos 'risky' en el envío.
 // Por defecto 0 = NO se envían los riesgosos (más seguro contra sanciones de AWS).
 try {
