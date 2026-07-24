@@ -312,11 +312,17 @@ router.post('/:id/duplicate', (req, res) => {
   const campaign = db.prepare('SELECT * FROM campaigns WHERE id = ? AND distributor_id = ?').get(req.params.id, req.user.distributor_id);
   if (!campaign) return res.status(404).json({ error: 'Campaña no encontrada' });
 
+  // La copia conserva TAMBIÉN el envío por goteo y el segmento. Si no se copiaran, una copia
+  // de una campaña de goteo saldría como envío normal y "Enviar ahora" intentaría mandar la
+  // lista entera de una sola vez. La copia siempre nace como borrador (status por defecto).
   const newName = `${campaign.name} (Copia)`;
   const result = db.prepare(`
-    INSERT INTO campaigns (distributor_id, list_id, name, subject, from_name, from_email, body_html)
-    VALUES (?,?,?,?,?,?,?)
-  `).run(campaign.distributor_id, campaign.list_id, newName, campaign.subject, campaign.from_name, campaign.from_email, campaign.body_html);
+    INSERT INTO campaigns (distributor_id, list_id, name, subject, from_name, from_email, body_html,
+                           daily_limit, segment_key, segment_value)
+    VALUES (?,?,?,?,?,?,?,?,?,?)
+  `).run(campaign.distributor_id, campaign.list_id, newName, campaign.subject, campaign.from_name,
+         campaign.from_email, campaign.body_html,
+         campaign.daily_limit, campaign.segment_key, campaign.segment_value);
 
   res.json({ id: result.lastInsertRowid, name: newName });
 });
