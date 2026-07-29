@@ -49,8 +49,20 @@ export function enVentanaDeEnvio(minutos = minutosColombia()) {
   return minutos >= INICIO_MIN && minutos < FIN_MIN;
 }
 
+// SOLO DÍAS LABORALES (lunes a viernes), en hora de Colombia.
+// Motivo: estos correos van dirigidos a empresas; un correo comercial que llega sábado o
+// domingo se pierde bajo el correo del lunes. Si el lote cae en fin de semana, simplemente
+// no sale y se retoma el siguiente día hábil (no se pierde: los pendientes siguen ahí).
+export function esDiaHabilColombia(ahora = new Date()) {
+  const d = new Date(ahora.getTime() - 5 * 60 * 60 * 1000); // Colombia = UTC-5 todo el año
+  const dia = d.getUTCDay();                                 // 0 = domingo, 6 = sábado
+  return dia >= 1 && dia <= 5;
+}
+
 export async function processDripCampaigns() {
   if (running) return; // evita que dos ticks del cron se solapen
+  // Sábado y domingo no se envía nada (ver esDiaHabilColombia).
+  if (!esDiaHabilColombia()) return;
   // Fuera de la ventana de la mañana no se envía nada; el cron vuelve a intentar cada minuto
   // y el lote del día sale en cuanto entra la ventana.
   if (!enVentanaDeEnvio()) return;
